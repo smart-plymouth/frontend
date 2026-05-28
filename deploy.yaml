@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smartplymouth-frontend
+  labels:
+    app: smartplymouth-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smartplymouth-frontend
+  template:
+    metadata:
+      labels:
+        app: smartplymouth-frontend
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: frontend
+          image: registry.robertputt.technology/smartplymouth/frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: smartplymouth-frontend
+  labels:
+    app: smartplymouth-frontend
+spec:
+  type: ClusterIP
+  selector:
+    app: smartplymouth-frontend
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
