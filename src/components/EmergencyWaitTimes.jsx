@@ -67,10 +67,22 @@ function EmergencyWaitTimes() {
     return h > 0 ? `${h}h ${rem}m` : `${m}m`
   }
 
+  // Find the most recent timestamp across all wait times
+  const latestTimestamp = Object.values(waitTimes).reduce((latest, wt) => {
+    if (!wt) return latest
+    const ts = new Date(wt.timestamp)
+    return ts > latest ? ts : latest
+  }, new Date(0))
+
   return (
     <div className="bg-white border border-slate-200 rounded-lg shadow-sm">
-      <div className="px-4 py-3 border-b border-slate-100">
+      <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
         <h2 className="text-sm font-semibold text-slate-900">Emergency Wait Times</h2>
+        {latestTimestamp.getTime() > 0 && (
+          <span className="text-[11px] text-slate-400">
+            Last updated {latestTimestamp.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+          </span>
+        )}
       </div>
       <table className="w-full text-sm table-fixed">
         <thead>

@@ -104,19 +104,26 @@ function LocationModal({ location, onClose }) {
 
         {/* Current stats */}
         {latestWait && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1px', backgroundColor: '#e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
-            <StatCard
-              label="Longest Wait"
-              value={formatWaitTime(latestWait.longest_wait)}
-            />
-            <StatCard
-              label="Patients Waiting"
-              value={latestWait.patients_waiting}
-            />
-            <StatCard
-              label="Patients In Department"
-              value={latestWait.patients_in_department}
-            />
+          <div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1px', backgroundColor: '#e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
+              <StatCard
+                label="Longest Wait"
+                value={formatWaitTime(latestWait.longest_wait)}
+              />
+              <StatCard
+                label="Patients Waiting"
+                value={latestWait.patients_waiting}
+              />
+              <StatCard
+                label="Patients In Department"
+                value={latestWait.patients_in_department}
+              />
+            </div>
+            <div style={{ padding: '0.5rem 1.25rem', borderBottom: '1px solid #e2e8f0', backgroundColor: '#f8fafc' }}>
+              <p style={{ fontSize: '0.6875rem', color: '#64748b', margin: 0 }}>
+                Last updated: {new Date(latestWait.timestamp).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+              </p>
+            </div>
           </div>
         )}
 
