@@ -79,7 +79,7 @@ function EmergencyWaitTimes() {
   }, new Date(0))
 
   return (
-    <div className="bg-white border border-teal-200 rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-white border border-teal-200 rounded-lg shadow-sm overflow-hidden flex flex-col">
       <div className="px-4 py-3 bg-gradient-to-r from-teal-600 to-teal-700 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -93,7 +93,7 @@ function EmergencyWaitTimes() {
           </span>
         )}
       </div>
-      <table className="w-full text-sm table-fixed">
+      <table className="w-full text-sm table-fixed flex-1">
         <thead>
           <tr className="border-b border-teal-100 bg-teal-50/50">
             <th className="text-left font-medium px-4 py-2 text-[11px] uppercase tracking-wide text-teal-700">Location</th>
@@ -145,6 +145,17 @@ function EmergencyWaitTimes() {
           })}
         </tbody>
       </table>
+
+      <div className="px-4 py-2 border-t border-teal-100 mt-auto">
+        <a
+          href="https://www.plymouthhospitals.nhs.uk/urgent-waiting-times/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[11px] text-teal-600 hover:text-teal-800 hover:underline"
+        >
+          Source: Plymouth Hospitals NHS Trust
+        </a>
+      </div>
 
       {selectedLocation && (
         <LocationModal location={selectedLocation} onClose={() => setSelectedLocation(null)} />

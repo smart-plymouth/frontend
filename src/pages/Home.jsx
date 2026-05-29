@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import EmergencyWaitTimes from '../components/EmergencyWaitTimes.jsx'
+import PlanningApplications from '../components/PlanningApplications.jsx'
 
 function Home() {
   const [time, setTime] = useState(new Date())
@@ -32,7 +33,7 @@ function Home() {
       {/* Dashboard sections */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <EmergencyWaitTimes />
-        {/* Future sections go here */}
+        <PlanningApplications />
       </div>
     </div>
   )
