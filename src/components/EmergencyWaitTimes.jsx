@@ -47,7 +47,11 @@ function EmergencyWaitTimes() {
 
   if (loading) {
     return (
-      <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+      <div className="bg-white border border-teal-200 rounded-lg p-4 shadow-sm flex items-center gap-2">
+        <svg className="h-4 w-4 animate-spin text-teal-600" viewBox="0 0 24 24" fill="none">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+        </svg>
         <p className="text-sm text-slate-500">Loading wait times…</p>
       </div>
     )
@@ -55,7 +59,7 @@ function EmergencyWaitTimes() {
 
   if (error) {
     return (
-      <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+      <div className="bg-white border border-teal-200 rounded-lg p-4 shadow-sm">
         <p className="text-sm text-red-600">Error: {error}</p>
       </div>
     )
@@ -75,21 +79,26 @@ function EmergencyWaitTimes() {
   }, new Date(0))
 
   return (
-    <div className="bg-white border border-slate-200 rounded-lg shadow-sm">
-      <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-slate-900">Emergency Wait Times</h2>
+    <div className="bg-white border border-teal-200 rounded-lg shadow-sm overflow-hidden">
+      <div className="px-4 py-3 bg-gradient-to-r from-teal-600 to-teal-700 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+          </svg>
+          <h2 className="text-sm font-semibold text-white">Emergency Wait Times</h2>
+        </div>
         {latestTimestamp.getTime() > 0 && (
-          <span className="text-[11px] text-slate-400">
+          <span className="text-[11px] text-teal-100">
             Last updated {latestTimestamp.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
           </span>
         )}
       </div>
       <table className="w-full text-sm table-fixed">
         <thead>
-          <tr className="border-b border-slate-100">
-            <th className="text-left font-medium px-4 py-2 text-[11px] uppercase tracking-wide text-slate-400">Location</th>
-            <th className="text-right font-medium px-4 py-2 text-[11px] uppercase tracking-wide text-slate-400 w-28">Longest Wait</th>
-            <th className="text-right font-medium px-4 py-2 text-[11px] uppercase tracking-wide text-slate-400 w-32">Patients Waiting</th>
+          <tr className="border-b border-teal-100 bg-teal-50/50">
+            <th className="text-left font-medium px-4 py-2 text-[11px] uppercase tracking-wide text-teal-700">Location</th>
+            <th className="text-right font-medium px-4 py-2 text-[11px] uppercase tracking-wide text-teal-700 w-28">Longest Wait</th>
+            <th className="text-right font-medium px-4 py-2 text-[11px] uppercase tracking-wide text-teal-700 w-32">Patients Waiting</th>
           </tr>
         </thead>
         <tbody>
@@ -108,7 +117,7 @@ function EmergencyWaitTimes() {
             return (
               <tr
                 key={location.id}
-                className="border-b border-slate-50 last:border-0 hover:bg-slate-50 cursor-pointer"
+                className="border-b border-teal-50 last:border-0 hover:bg-teal-50/40 cursor-pointer"
                 onClick={() => handleRowClick(location)}
               >
                 <td className="px-4 py-2.5">
