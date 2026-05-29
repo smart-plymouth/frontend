@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import PlanningModal from './PlanningModal.jsx'
 
 const API_BASE = 'https://api.smartplymouth.org/api/planning/v1.0'
@@ -28,6 +29,7 @@ function getDefaultWeekStart() {
 
 function PlanningApplications() {
   const [total, setTotal] = useState(null)
+  const [topCases, setTopCases] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [weekStart, setWeekStart] = useState(getDefaultWeekStart)
@@ -50,11 +52,23 @@ function PlanningApplications() {
     try {
       const { from, to } = dateRange
       const res = await fetch(
-        `${API_BASE}/cases?validated_from=${from}&validated_to=${to}&per_page=1`
+        `${API_BASE}/cases?validated_from=${from}&validated_to=${to}&per_page=100`
       )
       if (!res.ok) throw new Error('Failed to fetch planning data')
       const data = await res.json()
       setTotal(data.total)
+
+      // Pick top 3 by combined impact + size score
+      const scored = (data.cases || [])
+        .filter((c) => c.ai_analysis)
+        .map((c) => ({
+          ...c,
+          _score: (c.potential_impact_score || 0) + (c.estimated_size || 0),
+        }))
+        .sort((a, b) => b._score - a._score)
+        .slice(0, 3)
+      setTopCases(scored)
+
       setError(null)
     } catch (err) {
       setError(err.message)
@@ -138,15 +152,48 @@ function PlanningApplications() {
         ) : error ? (
           <p className="text-sm text-red-600">Error: {error}</p>
         ) : (
-          <div className="flex items-center gap-3">
-            <span className="text-3xl font-bold text-slate-900">{total}</span>
-            <span className="text-sm text-slate-600">new applications this week</span>
-            <button
-              onClick={() => setShowModal(true)}
-              className="ml-auto text-xs font-medium text-indigo-600 hover:text-indigo-800 border border-indigo-200 rounded px-2 py-1 hover:bg-indigo-50 transition-colors"
-            >
-              View
-            </button>
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <span className="text-3xl font-bold text-slate-900">{total}</span>
+              <span className="text-sm text-slate-600">new applications this week</span>
+              <button
+                onClick={() => setShowModal(true)}
+                className="ml-auto text-xs font-medium text-indigo-600 hover:text-indigo-800 border border-indigo-200 rounded px-2 py-1 hover:bg-indigo-50 transition-colors"
+              >
+                View
+              </button>
+            </div>
+
+            {topCases.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-[11px] font-medium text-slate-500 uppercase tracking-wide">Highest Impact &amp; Risk</p>
+                {topCases.map((c) => (
+                  <Link
+                    key={c.reference}
+                    to={`/planning/${encodeURIComponent(c.reference)}`}
+                    className="block bg-slate-50 hover:bg-indigo-50 border border-slate-200 rounded-lg p-2.5 transition-colors"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs text-slate-800 truncate">
+                          <span className="font-semibold">{c.reference}</span>
+                          <span className="text-slate-500"> — {c.proposal}</span>
+                        </p>
+                        <p className="text-[11px] text-slate-500 truncate mt-0.5">{c.address}</p>
+                      </div>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-100 text-red-700" title="Impact score">
+                          ⚠ {c.potential_impact_score || 0}
+                        </span>
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-100 text-blue-700" title="Size score">
+                          ◆ {c.estimated_size || 0}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

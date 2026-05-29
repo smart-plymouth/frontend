@@ -6,6 +6,7 @@ const API_BASE = 'https://api.smartplymouth.org/api/planning/v1.0'
 function PlanningCase() {
   const { reference } = useParams()
   const [planningCase, setPlanningCase] = useState(null)
+  const [objections, setObjections] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -21,10 +22,27 @@ function PlanningCase() {
       const data = await res.json()
       setPlanningCase(data)
       setError(null)
+
+      // Fetch objections if AI analysis is complete
+      if (data.ai_analysis) {
+        fetchObjections()
+      }
     } catch (err) {
       setError(err.message)
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function fetchObjections() {
+    try {
+      const res = await fetch(`${API_BASE}/cases/${encodeURIComponent(reference)}/objections`)
+      if (res.ok) {
+        const data = await res.json()
+        setObjections(data.objections || [])
+      }
+    } catch {
+      // Objections are non-critical, silently ignore errors
     }
   }
 
@@ -147,6 +165,20 @@ function PlanningCase() {
                   <div>
                     <h3 className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">AI Rationalisation</h3>
                     <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">{c.ai_rationalisation}</p>
+                  </div>
+                )}
+
+                {objections.length > 0 && (
+                  <div>
+                    <h3 className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">Potential Grounds for Objection</h3>
+                    <div className="space-y-3">
+                      {objections.map((obj) => (
+                        <div key={obj.id} className="bg-red-50 border border-red-200 rounded-lg p-3">
+                          <p className="text-sm font-medium text-red-800">{obj.objection}</p>
+                          <p className="text-xs text-red-600 mt-1 leading-relaxed">{obj.ai_rationalisation}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
