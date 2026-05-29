@@ -23,11 +23,7 @@ function getWeekRange(weekStartMonday) {
 
 function getDefaultWeekStart() {
   const today = new Date()
-  const thisMonday = getMonday(today)
-  // Default to previous week
-  const prevMonday = new Date(thisMonday)
-  prevMonday.setDate(thisMonday.getDate() - 7)
-  return prevMonday
+  return getMonday(today)
 }
 
 function PlanningApplications() {
@@ -96,6 +92,40 @@ function PlanningApplications() {
         <h2 className="text-sm font-semibold text-white">Planning</h2>
       </div>
 
+      <div className="px-4 py-2 border-b border-indigo-100">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={goPrev}
+            disabled={!canGoPrev}
+            className="text-xs text-indigo-600 hover:text-indigo-800 disabled:text-slate-300 disabled:cursor-not-allowed flex items-center gap-1"
+            aria-label="Previous week"
+          >
+            <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+            Prev
+          </button>
+
+          <p className="text-sm font-medium text-slate-700">
+            {new Date(dateRange.from).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+            {' – '}
+            {new Date(dateRange.to).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+          </p>
+
+          <button
+            onClick={goNext}
+            disabled={!canGoNext}
+            className="text-xs text-indigo-600 hover:text-indigo-800 disabled:text-slate-300 disabled:cursor-not-allowed flex items-center gap-1"
+            aria-label="Next week"
+          >
+            Next
+            <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
       <div className="p-4 flex-1">
         {loading ? (
           <div className="flex items-center gap-2">
@@ -110,7 +140,7 @@ function PlanningApplications() {
         ) : (
           <div className="flex items-center gap-3">
             <span className="text-3xl font-bold text-slate-900">{total}</span>
-            <span className="text-sm text-slate-600">new applications</span>
+            <span className="text-sm text-slate-600">new applications this week</span>
             <button
               onClick={() => setShowModal(true)}
               className="ml-auto text-xs font-medium text-indigo-600 hover:text-indigo-800 border border-indigo-200 rounded px-2 py-1 hover:bg-indigo-50 transition-colors"
@@ -119,40 +149,6 @@ function PlanningApplications() {
             </button>
           </div>
         )}
-      </div>
-
-      <div className="px-4 py-2 mt-auto">
-        <div className="flex items-center justify-between">
-          <button
-            onClick={goPrev}
-            disabled={!canGoPrev}
-            className="text-xs text-indigo-600 hover:text-indigo-800 disabled:text-slate-300 disabled:cursor-not-allowed flex items-center gap-1"
-            aria-label="Previous week"
-          >
-            <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-            Prev week
-          </button>
-
-          <p className="text-[11px] text-slate-400">
-            {new Date(dateRange.from).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
-            {' – '}
-            {new Date(dateRange.to).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-          </p>
-
-          <button
-            onClick={goNext}
-            disabled={!canGoNext}
-            className="text-xs text-indigo-600 hover:text-indigo-800 disabled:text-slate-300 disabled:cursor-not-allowed flex items-center gap-1"
-            aria-label="Next week"
-          >
-            Next week
-            <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </button>
-        </div>
       </div>
 
       <div className="px-4 py-2 border-t border-indigo-100">
