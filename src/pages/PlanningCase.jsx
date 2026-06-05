@@ -177,10 +177,50 @@ function PlanningCase() {
                   </div>
                 )}
 
-                {c.ai_rationalisation && (
+
+
+                {(c.pros?.length > 0 || c.cons?.length > 0) && (
                   <div>
-                    <h3 className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">AI Rationalisation</h3>
-                    <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">{c.ai_rationalisation}</p>
+                    <h3 className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">Pros &amp; Cons</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {c.pros?.length > 0 && (
+                        <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                          <h4 className="text-xs font-semibold text-green-800 uppercase tracking-wide mb-2 flex items-center gap-1.5">
+                            <svg className="h-3.5 w-3.5 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            Pros
+                          </h4>
+                          <ul className="space-y-1.5">
+                            {c.pros.map((pro, idx) => (
+                              <li key={idx} className="text-sm text-green-800 flex items-start gap-1.5">
+                                <span className="text-green-500 mt-0.5 shrink-0">•</span>
+                                {pro}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {c.cons?.length > 0 && (
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                          <h4 className="text-xs font-semibold text-red-800 uppercase tracking-wide mb-2 flex items-center gap-1.5">
+                            <svg className="h-3.5 w-3.5 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <line x1="18" y1="6" x2="6" y2="18" />
+                              <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                            Cons
+                          </h4>
+                          <ul className="space-y-1.5">
+                            {c.cons.map((con, idx) => (
+                              <li key={idx} className="text-sm text-red-800 flex items-start gap-1.5">
+                                <span className="text-red-500 mt-0.5 shrink-0">•</span>
+                                {con}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
 
