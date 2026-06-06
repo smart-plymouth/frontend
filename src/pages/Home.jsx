@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import EmergencyWaitTimes from '../components/EmergencyWaitTimes.jsx'
 import PlanningApplications from '../components/PlanningApplications.jsx'
+import BirdMonitoring from '../components/BirdMonitoring.jsx'
 
 function Home() {
   const [time, setTime] = useState(new Date())
@@ -34,6 +35,7 @@ function Home() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <EmergencyWaitTimes />
         <PlanningApplications />
+        <BirdMonitoring />
       </div>
     </div>
   )
