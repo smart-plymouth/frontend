@@ -105,7 +105,7 @@ function BirdMonitoringExplore() {
   }
 
   function formatConfidence(confidence) {
-    return `${Math.round(confidence * 100)}%`
+    return `${Math.round(confidence)}%`
   }
 
   function formatDateTime(datetime) {
@@ -298,8 +298,8 @@ function BirdMonitoringExplore() {
               <tbody>
                 {sightings.map((sighting) => {
                   let confidenceColor = 'text-slate-600'
-                  if (sighting.confidence >= 0.8) confidenceColor = 'text-green-700 font-semibold'
-                  else if (sighting.confidence >= 0.5) confidenceColor = 'text-amber-600 font-medium'
+                  if (sighting.confidence >= 80) confidenceColor = 'text-green-700 font-semibold'
+                  else if (sighting.confidence >= 50) confidenceColor = 'text-amber-600 font-medium'
 
                   return (
                     <tr
@@ -310,6 +310,9 @@ function BirdMonitoringExplore() {
                         <div className="flex items-center gap-2">
                           <span className="h-2 w-2 rounded-full shrink-0 bg-green-500" />
                           <span className="font-medium text-slate-800">{sighting.species.common_name}</span>
+                          {sighting.species.scientific_name && (
+                            <span className="text-slate-500 italic">({sighting.species.scientific_name})</span>
+                          )}
                         </div>
                       </td>
                       <td className="px-4 py-2.5 text-slate-600">{getSiteName(sighting.site_id)}</td>

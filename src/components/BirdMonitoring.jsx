@@ -41,7 +41,7 @@ function BirdMonitoring() {
   }
 
   function formatConfidence(confidence) {
-    return `${Math.round(confidence * 100)}%`
+    return `${Math.round(confidence)}%`
   }
 
   function formatDateTime(datetime) {
@@ -103,8 +103,8 @@ function BirdMonitoring() {
         <tbody>
           {sightings.map((sighting) => {
             let confidenceColor = 'text-slate-600'
-            if (sighting.confidence >= 0.8) confidenceColor = 'text-green-700 font-semibold'
-            else if (sighting.confidence >= 0.5) confidenceColor = 'text-amber-600 font-medium'
+            if (sighting.confidence >= 80) confidenceColor = 'text-green-700 font-semibold'
+            else if (sighting.confidence >= 50) confidenceColor = 'text-amber-600 font-medium'
             else confidenceColor = 'text-slate-500'
 
             return (
