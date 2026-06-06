@@ -113,10 +113,7 @@ function BirdMonitoring() {
                 className="border-b border-green-50 last:border-0 hover:bg-green-50/40"
               >
                 <td className="px-4 py-2.5">
-                  <div className="flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full shrink-0 bg-green-500" />
-                    <span className="font-medium text-slate-800 truncate">{sighting.species.common_name}</span>
-                  </div>
+                  <span className="font-medium text-slate-800 truncate">{sighting.species.common_name}</span>
                 </td>
                 <td className="px-4 py-2.5 text-slate-600 truncate">
                   {getSiteName(sighting.site_id)}

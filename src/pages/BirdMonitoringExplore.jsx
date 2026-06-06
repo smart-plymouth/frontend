@@ -25,6 +25,7 @@ function BirdMonitoringExplore() {
   const [toDate, setToDate] = useState('')
   const [dateError, setDateError] = useState('')
   const [page, setPage] = useState(1)
+  const [birdImages, setBirdImages] = useState({})
 
   useEffect(() => {
     fetchSites()
@@ -106,6 +107,40 @@ function BirdMonitoringExplore() {
 
   function formatConfidence(confidence) {
     return `${Math.round(confidence)}%`
+  }
+
+  useEffect(() => {
+    fetchBirdImages()
+  }, [sightings])
+
+  async function fetchBirdImages() {
+    const newNames = sightings
+      .map((s) => s.species.scientific_name)
+      .filter((name) => name && !birdImages[name])
+
+    const uniqueNames = [...new Set(newNames)]
+    if (uniqueNames.length === 0) return
+
+    const results = await Promise.all(
+      uniqueNames.map(async (name) => {
+        try {
+          const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(name)}&gsrnamespace=6&gsrlimit=1&prop=imageinfo&iiprop=url&iiurlwidth=96&format=json&formatversion=2&origin=*`
+          const res = await fetch(url)
+          if (!res.ok) return [name, null]
+          const data = await res.json()
+          const page = data.query?.pages?.[0]
+          const thumbUrl = page?.imageinfo?.[0]?.thumburl || null
+          return [name, thumbUrl]
+        } catch {
+          return [name, null]
+        }
+      })
+    )
+
+    setBirdImages((prev) => ({
+      ...prev,
+      ...Object.fromEntries(results),
+    }))
   }
 
   function formatDateTime(datetime) {
@@ -308,11 +343,21 @@ function BirdMonitoringExplore() {
                     >
                       <td className="px-4 py-2.5">
                         <div className="flex items-center gap-2">
-                          <span className="h-2 w-2 rounded-full shrink-0 bg-green-500" />
-                          <span className="font-medium text-slate-800">{sighting.species.common_name}</span>
-                          {sighting.species.scientific_name && (
-                            <span className="text-slate-500 italic">({sighting.species.scientific_name})</span>
+                          {sighting.species.scientific_name && birdImages[sighting.species.scientific_name] ? (
+                            <img
+                              src={birdImages[sighting.species.scientific_name]}
+                              alt={sighting.species.common_name}
+                              className="h-12 w-12 rounded object-cover shrink-0"
+                            />
+                          ) : (
+                            <span className="h-2 w-2 rounded-full shrink-0 bg-green-500" />
                           )}
+                          <div>
+                            <span className="font-medium text-slate-800">{sighting.species.common_name}</span>
+                            {sighting.species.scientific_name && (
+                              <span className="text-slate-500 italic ml-1">({sighting.species.scientific_name})</span>
+                            )}
+                          </div>
                         </div>
                       </td>
                       <td className="px-4 py-2.5 text-slate-600">{getSiteName(sighting.site_id)}</td>
