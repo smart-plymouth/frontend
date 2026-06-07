@@ -334,7 +334,8 @@ function BirdMonitoringExplore() {
                 {sightings.map((sighting) => {
                   let confidenceColor = 'text-slate-600'
                   if (sighting.confidence >= 80) confidenceColor = 'text-green-700 font-semibold'
-                  else if (sighting.confidence >= 50) confidenceColor = 'text-amber-600 font-medium'
+                  else if (sighting.confidence >= 65) confidenceColor = 'text-amber-600 font-medium'
+                  else confidenceColor = 'text-red-600 font-medium'
 
                   return (
                     <tr
