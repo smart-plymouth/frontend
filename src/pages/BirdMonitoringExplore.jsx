@@ -39,7 +39,7 @@ function BirdMonitoringExplore() {
 
   useEffect(() => {
     fetchAllSightings()
-  }, [selectedSite, fromDate, toDate])
+  }, [selectedSite])
 
   async function fetchSites() {
     try {
@@ -80,11 +80,17 @@ function BirdMonitoringExplore() {
       let currentPage = 1
       let totalPages = 1
 
+      // Always fetch last 24 hours
+      const now = new Date()
+      const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+      const toDateStr = now.toISOString().split('T')[0]
+      const fromDateStr = yesterday.toISOString().split('T')[0]
+
       while (currentPage <= totalPages) {
         const params = new URLSearchParams({ page: currentPage.toString(), per_page: '100' })
         if (selectedSite) params.set('site_id', selectedSite)
-        if (fromDate) params.set('from_date', fromDate)
-        if (toDate) params.set('to_date', toDate)
+        params.set('from_date', fromDateStr)
+        params.set('to_date', toDateStr)
 
         const res = await fetch(`${API_BASE}/sightings?${params}`)
         if (!res.ok) break
@@ -94,7 +100,9 @@ function BirdMonitoringExplore() {
         currentPage++
       }
 
-      setAllSightings(allResults)
+      // Filter client-side to exactly 24 hours
+      const cutoff = now.getTime() - 24 * 60 * 60 * 1000
+      setAllSightings(allResults.filter((s) => new Date(s.datetime).getTime() >= cutoff))
     } catch {
       // Stats are non-critical
     } finally {
@@ -311,6 +319,7 @@ function BirdMonitoringExplore() {
         const { sorted, speciesHourly } = computeSpeciesStats()
         const maxCount = sorted.length > 0 ? sorted[0][1] : 1
         const hours = Array.from({ length: 24 }, (_, i) => i)
+        const currentHour = new Date().getHours()
 
         return (
           <div className="bg-white border border-green-200 rounded-lg shadow-sm overflow-hidden">
@@ -321,7 +330,7 @@ function BirdMonitoringExplore() {
                 <path d="M7 12h8" />
                 <path d="M7 8h12" />
               </svg>
-              <h2 className="text-sm font-semibold text-white">Species Activity</h2>
+              <h2 className="text-sm font-semibold text-white">Species Activity (Last 24 Hours)</h2>
             </div>
             <div className="p-4 overflow-x-auto">
               <div className="grid grid-cols-[minmax(120px,auto)_minmax(100px,1fr)_1px_auto] gap-x-4 items-center min-w-[700px]">
@@ -331,7 +340,13 @@ function BirdMonitoringExplore() {
                 <div />
                 <div className="flex">
                   {hours.map((h) => (
-                    <div key={h} className="w-6 text-center text-[10px] text-slate-400">{h}</div>
+                    <div
+                      key={h}
+                      className={`w-6 text-center text-[10px] ${h === currentHour ? 'font-bold text-green-700' : 'text-slate-400'}`}
+                      style={h === currentHour ? { borderRight: '2px solid #15803d' } : undefined}
+                    >
+                      {h}
+                    </div>
                   ))}
                 </div>
 
@@ -370,6 +385,7 @@ function BirdMonitoringExplore() {
                             <div
                               key={h}
                               className={`w-6 h-5 flex items-center justify-center text-[10px] font-medium ${bgColor} ${textColor} border border-white/50`}
+                              style={h === currentHour ? { borderRight: '2px solid #15803d' } : undefined}
                               title={`${name}: ${val} detection${val !== 1 ? 's' : ''} at ${h}:00`}
                             >
                               {val > 0 ? val : ''}
@@ -381,11 +397,20 @@ function BirdMonitoringExplore() {
                   )
                 })}
 
-                {/* X-axis label */}
+                {/* X-axis labels */}
                 <div />
                 <div className="text-[10px] text-slate-400 text-center pt-1">Detections</div>
                 <div />
-                <div className="text-[10px] text-slate-400 text-center pt-1">Hour of Day</div>
+                <div className="pt-1">
+                  <div className="flex h-4">
+                    <div className="bg-green-100 border border-green-300 rounded-l flex items-center justify-center" style={{ width: `${((currentHour + 1) / 24) * 100}%` }}>
+                      <span className="text-[10px] font-medium text-green-700">Today</span>
+                    </div>
+                    <div className="bg-slate-100 border border-slate-300 rounded-r flex items-center justify-center flex-1">
+                      <span className="text-[10px] font-medium text-slate-500">Yesterday</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
