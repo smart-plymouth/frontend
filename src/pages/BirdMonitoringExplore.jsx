@@ -26,6 +26,8 @@ function BirdMonitoringExplore() {
   const [dateError, setDateError] = useState('')
   const [page, setPage] = useState(1)
   const [birdImages, setBirdImages] = useState({})
+  const [allSightings, setAllSightings] = useState([])
+  const [statsLoading, setStatsLoading] = useState(true)
 
   useEffect(() => {
     fetchSites()
@@ -34,6 +36,10 @@ function BirdMonitoringExplore() {
   useEffect(() => {
     fetchSightings()
   }, [selectedSite, fromDate, toDate, page])
+
+  useEffect(() => {
+    fetchAllSightings()
+  }, [selectedSite, fromDate, toDate])
 
   async function fetchSites() {
     try {
@@ -55,7 +61,7 @@ function BirdMonitoringExplore() {
       if (toDate) params.set('to_date', toDate)
 
       const res = await fetch(`${API_BASE}/sightings?${params}`)
-      if (!res.ok) throw new Error('Failed to fetch sightings')
+      if (!res.ok) throw new Error('Failed to fetch detections')
       const data = await res.json()
       setSightings(data.sightings)
       setPagination({ page: data.page, pages: data.pages, total: data.total })
@@ -65,6 +71,55 @@ function BirdMonitoringExplore() {
     } finally {
       setLoading(false)
     }
+  }
+
+  async function fetchAllSightings() {
+    setStatsLoading(true)
+    try {
+      const allResults = []
+      let currentPage = 1
+      let totalPages = 1
+
+      while (currentPage <= totalPages) {
+        const params = new URLSearchParams({ page: currentPage.toString(), per_page: '100' })
+        if (selectedSite) params.set('site_id', selectedSite)
+        if (fromDate) params.set('from_date', fromDate)
+        if (toDate) params.set('to_date', toDate)
+
+        const res = await fetch(`${API_BASE}/sightings?${params}`)
+        if (!res.ok) break
+        const data = await res.json()
+        allResults.push(...data.sightings)
+        totalPages = data.pages
+        currentPage++
+      }
+
+      setAllSightings(allResults)
+    } catch {
+      // Stats are non-critical
+    } finally {
+      setStatsLoading(false)
+    }
+  }
+
+  function computeSpeciesStats() {
+    const speciesCounts = {}
+    const speciesHourly = {}
+
+    for (const s of allSightings) {
+      const name = s.species.common_name
+      speciesCounts[name] = (speciesCounts[name] || 0) + 1
+
+      const hour = new Date(s.datetime).getHours()
+      if (!speciesHourly[name]) speciesHourly[name] = {}
+      speciesHourly[name][hour] = (speciesHourly[name][hour] || 0) + 1
+    }
+
+    // Sort by total count descending
+    const sorted = Object.entries(speciesCounts)
+      .sort(([, a], [, b]) => b - a)
+
+    return { sorted, speciesHourly }
   }
 
   function validateDateRange(from, to) {
@@ -172,7 +227,7 @@ function BirdMonitoringExplore() {
       <div>
         <h1 className="text-2xl font-semibold text-slate-900">Bird Monitoring</h1>
         <p className="text-sm text-slate-500 mt-1">
-          Explore bird sightings detected by BirdNET-Pi devices across Plymouth
+          Explore bird detections by BirdNET-Pi devices across Plymouth
         </p>
       </div>
 
@@ -251,6 +306,92 @@ function BirdMonitoringExplore() {
         </div>
       )}
 
+      {/* Species Activity */}
+      {!statsLoading && allSightings.length > 0 && (() => {
+        const { sorted, speciesHourly } = computeSpeciesStats()
+        const maxCount = sorted.length > 0 ? sorted[0][1] : 1
+        const hours = Array.from({ length: 24 }, (_, i) => i)
+
+        return (
+          <div className="bg-white border border-green-200 rounded-lg shadow-sm overflow-hidden">
+            <div className="px-4 py-3 bg-gradient-to-r from-green-600 to-green-700 flex items-center gap-2">
+              <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 3v18h18" />
+                <path d="M7 16h4" />
+                <path d="M7 12h8" />
+                <path d="M7 8h12" />
+              </svg>
+              <h2 className="text-sm font-semibold text-white">Species Activity</h2>
+            </div>
+            <div className="p-4 overflow-x-auto">
+              <div className="grid grid-cols-[minmax(120px,auto)_minmax(100px,1fr)_1px_auto] gap-x-4 items-center min-w-[700px]">
+                {/* Header row */}
+                <div />
+                <div className="text-[11px] text-slate-500 font-medium text-center">Detections</div>
+                <div />
+                <div className="flex">
+                  {hours.map((h) => (
+                    <div key={h} className="w-6 text-center text-[10px] text-slate-400">{h}</div>
+                  ))}
+                </div>
+
+                {/* Species rows */}
+                {sorted.map(([name, count]) => {
+                  const barWidth = (count / maxCount) * 100
+                  return (
+                    <div key={name} className="contents">
+                      <div className="text-xs font-medium text-slate-700 text-right pr-2 py-1 truncate">{name}</div>
+                      <div className="flex items-center gap-1.5 py-1">
+                        <div className="flex-1 h-5 bg-slate-100 rounded overflow-hidden relative">
+                          <div
+                            className="h-full rounded bg-green-700"
+                            style={{ width: `${barWidth}%` }}
+                          />
+                        </div>
+                        <span className="text-[11px] font-semibold text-slate-600 w-6 text-right">{count}</span>
+                      </div>
+                      <div className="w-px bg-slate-200 self-stretch" />
+                      <div className="flex py-1">
+                        {hours.map((h) => {
+                          const val = speciesHourly[name]?.[h] || 0
+                          let bgColor = 'bg-slate-50'
+                          let textColor = 'text-transparent'
+                          if (val > 0) {
+                            textColor = 'text-green-900'
+                            if (val >= 8) bgColor = 'bg-green-700'
+                            else if (val >= 5) bgColor = 'bg-green-500'
+                            else if (val >= 3) bgColor = 'bg-green-400'
+                            else if (val >= 2) bgColor = 'bg-green-300'
+                            else bgColor = 'bg-green-200'
+
+                            if (val >= 5) textColor = 'text-white'
+                          }
+                          return (
+                            <div
+                              key={h}
+                              className={`w-6 h-5 flex items-center justify-center text-[10px] font-medium ${bgColor} ${textColor} border border-white/50`}
+                              title={`${name}: ${val} detection${val !== 1 ? 's' : ''} at ${h}:00`}
+                            >
+                              {val > 0 ? val : ''}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )
+                })}
+
+                {/* X-axis label */}
+                <div />
+                <div className="text-[10px] text-slate-400 text-center pt-1">Detections</div>
+                <div />
+                <div className="text-[10px] text-slate-400 text-center pt-1">Hour of Day</div>
+              </div>
+            </div>
+          </div>
+        )
+      })()}
+
       {/* Sightings table */}
       <div className="bg-white border border-green-200 rounded-lg shadow-sm overflow-hidden">
         <div className="px-4 py-3 bg-gradient-to-r from-green-600 to-green-700 flex items-center justify-between">
@@ -263,7 +404,7 @@ function BirdMonitoringExplore() {
               <path d="M14 17.75V21" />
               <path d="M7 18a6 6 0 0 0 3.84-10.61" />
             </svg>
-            <h2 className="text-sm font-semibold text-white">Sightings</h2>
+            <h2 className="text-sm font-semibold text-white">Detections</h2>
           </div>
           <span className="text-[11px] text-green-100">
             {pagination.total} total {(selectedSite || fromDate || toDate) && '(filtered)'}
@@ -317,7 +458,7 @@ function BirdMonitoringExplore() {
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
             </svg>
-            <p className="text-sm text-slate-500">Loading sightings…</p>
+            <p className="text-sm text-slate-500">Loading detections…</p>
           </div>
         ) : (
           <>
@@ -334,7 +475,7 @@ function BirdMonitoringExplore() {
                 {sightings.map((sighting) => {
                   let confidenceColor = 'text-slate-600'
                   if (sighting.confidence >= 80) confidenceColor = 'text-green-700 font-semibold'
-                  else if (sighting.confidence >= 65) confidenceColor = 'text-amber-600 font-medium'
+                  else if (sighting.confidence >= 70) confidenceColor = 'text-amber-600 font-medium'
                   else confidenceColor = 'text-red-600 font-medium'
 
                   return (
@@ -374,7 +515,7 @@ function BirdMonitoringExplore() {
                 {sightings.length === 0 && (
                   <tr>
                     <td colSpan="4" className="px-4 py-6 text-center text-slate-400 text-sm">
-                      No sightings found
+                      No detections found
                     </td>
                   </tr>
                 )}

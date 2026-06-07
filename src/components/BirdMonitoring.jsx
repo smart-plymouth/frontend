@@ -21,7 +21,7 @@ function BirdMonitoring() {
         fetch(`${API_BASE}/sightings?per_page=5`),
         fetch(`${API_BASE}/sites`),
       ])
-      if (!sightingsRes.ok) throw new Error('Failed to fetch bird sightings')
+      if (!sightingsRes.ok) throw new Error('Failed to fetch bird detections')
       if (!sitesRes.ok) throw new Error('Failed to fetch sites')
       const sightingsData = await sightingsRes.json()
       const sitesData = await sitesRes.json()
@@ -61,7 +61,7 @@ function BirdMonitoring() {
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
         </svg>
-        <p className="text-sm text-slate-500">Loading bird sightings…</p>
+        <p className="text-sm text-slate-500">Loading bird detections…</p>
       </div>
     )
   }
@@ -88,7 +88,7 @@ function BirdMonitoring() {
           </svg>
           <h2 className="text-sm font-semibold text-white">Bird Monitoring</h2>
         </div>
-        <span className="text-[11px] text-green-100">Last 5 sightings</span>
+        <span className="text-[11px] text-green-100">Last 5 detections</span>
       </div>
 
       <table className="w-full text-sm table-fixed flex-1">
@@ -104,7 +104,7 @@ function BirdMonitoring() {
           {sightings.map((sighting) => {
             let confidenceColor = 'text-slate-600'
             if (sighting.confidence >= 80) confidenceColor = 'text-green-700 font-semibold'
-            else if (sighting.confidence >= 65) confidenceColor = 'text-amber-600 font-medium'
+            else if (sighting.confidence >= 70) confidenceColor = 'text-amber-600 font-medium'
             else confidenceColor = 'text-red-600 font-medium'
 
             return (
@@ -130,7 +130,7 @@ function BirdMonitoring() {
           {sightings.length === 0 && (
             <tr>
               <td colSpan="4" className="px-4 py-4 text-center text-slate-400 text-sm">
-                No recent sightings
+                No recent detections
               </td>
             </tr>
           )}
