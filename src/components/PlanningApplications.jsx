@@ -198,7 +198,7 @@ function PlanningApplications() {
         )}
       </div>
 
-      <div className="px-4 py-2 border-t border-indigo-100">
+      <div className="px-4 py-2 border-t border-indigo-100 flex items-center justify-between">
         <a
           href="https://planning.plymouth.gov.uk/online-applications/"
           target="_blank"
@@ -207,6 +207,12 @@ function PlanningApplications() {
         >
           Source: Plymouth City Council Planning Portal
         </a>
+        <Link
+          to="/planning"
+          className="text-[11px] font-medium text-indigo-600 hover:text-indigo-800 border border-indigo-200 rounded px-2 py-1 hover:bg-indigo-50 transition-colors"
+        >
+          Explore →
+        </Link>
       </div>
 
       {showModal && (

@@ -76,7 +76,7 @@ function PlanningCase() {
       <div className="flex items-center gap-3">
         <Link to="/" className="text-sm text-indigo-600 hover:underline">← Dashboard</Link>
         <span className="text-slate-300">/</span>
-        <span className="text-sm text-slate-500">Planning</span>
+        <Link to="/planning" className="text-sm text-indigo-600 hover:underline">Planning</Link>
         <span className="text-slate-300">/</span>
         <span className="text-sm text-slate-700 font-medium">{c.reference}</span>
       </div>
