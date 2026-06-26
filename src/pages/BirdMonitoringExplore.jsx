@@ -226,7 +226,7 @@ function BirdMonitoringExplore() {
     <div className="space-y-6">
       {/* Breadcrumb */}
       <div className="flex items-center gap-3">
-        <Link to="/" className="text-sm text-green-600 hover:underline">← Dashboard</Link>
+        <Link to="/hud" className="text-sm text-green-600 hover:underline">← Dashboard</Link>
         <span className="text-slate-300">/</span>
         <span className="text-sm text-slate-700 font-medium">Bird Monitoring</span>
       </div>

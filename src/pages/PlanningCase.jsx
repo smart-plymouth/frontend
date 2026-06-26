@@ -62,7 +62,7 @@ function PlanningCase() {
     return (
       <div className="py-8">
         <p className="text-sm text-red-600">Error: {error}</p>
-        <Link to="/" className="text-sm text-indigo-600 hover:underline mt-2 inline-block">← Back to Dashboard</Link>
+        <Link to="/hud" className="text-sm text-indigo-600 hover:underline mt-2 inline-block">← Back to Dashboard</Link>
       </div>
     )
   }
@@ -74,7 +74,7 @@ function PlanningCase() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <Link to="/" className="text-sm text-indigo-600 hover:underline">← Dashboard</Link>
+        <Link to="/hud" className="text-sm text-indigo-600 hover:underline">← Dashboard</Link>
         <span className="text-slate-300">/</span>
         <Link to="/planning" className="text-sm text-indigo-600 hover:underline">Planning</Link>
         <span className="text-slate-300">/</span>

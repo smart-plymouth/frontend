@@ -4,8 +4,17 @@ import { Link } from 'react-router-dom'
 const API_BASE = 'https://api.smartplymouth.org/api/planning/v1.0'
 const PER_PAGE = 20
 
+function getMonday(date) {
+  const d = new Date(date)
+  const dayOfWeek = d.getDay()
+  const daysSinceMonday = (dayOfWeek + 6) % 7
+  d.setDate(d.getDate() - daysSinceMonday)
+  d.setHours(0, 0, 0, 0)
+  return d
+}
+
 function Planning() {
-  // --- Search state (uses API search parameter with server-side pagination) ---
+  // --- Search state ---
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [searchResults, setSearchResults] = useState([])
@@ -14,6 +23,14 @@ function Planning() {
   const [searchPage, setSearchPage] = useState(1)
   const [searchLoading, setSearchLoading] = useState(false)
   const [searchError, setSearchError] = useState(null)
+
+  // --- This week's applications state ---
+  const [weekCases, setWeekCases] = useState([])
+  const [weekTotal, setWeekTotal] = useState(0)
+  const [weekLoading, setWeekLoading] = useState(true)
+  const [weekError, setWeekError] = useState(null)
+
+  const hasSearch = debouncedSearch.trim().length > 0
 
   // Debounce search input
   useEffect(() => {
@@ -27,6 +44,37 @@ function Planning() {
   useEffect(() => {
     setSearchPage(1)
   }, [debouncedSearch])
+
+  // --- Fetch this week's applications ---
+  useEffect(() => {
+    async function fetchThisWeek() {
+      try {
+        const monday = getMonday(new Date())
+        const sunday = new Date(monday)
+        sunday.setDate(monday.getDate() + 6)
+        const from = monday.toISOString().split('T')[0]
+        const to = sunday.toISOString().split('T')[0]
+
+        const res = await fetch(`${API_BASE}/cases?validated_from=${from}&validated_to=${to}&per_page=100`)
+        if (!res.ok) throw new Error('Failed to fetch this week\'s applications')
+        const data = await res.json()
+        setWeekCases(
+          (data.cases || []).sort((a, b) => {
+            const scoreA = (a.potential_impact_score || 0) + (a.estimated_size || 0)
+            const scoreB = (b.potential_impact_score || 0) + (b.estimated_size || 0)
+            return scoreB - scoreA
+          })
+        )
+        setWeekTotal(data.total || 0)
+        setWeekError(null)
+      } catch (err) {
+        setWeekError(err.message)
+      } finally {
+        setWeekLoading(false)
+      }
+    }
+    fetchThisWeek()
+  }, [])
 
   // --- Fetch search results from API ---
   const fetchSearch = useCallback(async () => {
@@ -113,95 +161,163 @@ function Planning() {
           <p className="text-xs text-slate-500 mt-2">
             {searchLoading
               ? 'Searching…'
-              : debouncedSearch.trim()
+              : hasSearch
                 ? `${searchTotal.toLocaleString()} result${searchTotal !== 1 ? 's' : ''} for "${debouncedSearch}"`
                 : 'Enter a search term to find applications'}
           </p>
         </div>
 
-        {/* Results */}
-        <div className="divide-y divide-slate-100">
-          {searchLoading ? (
-            <div className="flex items-center gap-2 p-4">
+        {/* Search results — only shown when searching */}
+        {hasSearch && (
+          <>
+            <div className="divide-y divide-slate-100">
+              {searchLoading ? (
+                <div className="flex items-center gap-2 p-4">
+                  <svg className="h-4 w-4 animate-spin text-indigo-600" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                  </svg>
+                  <p className="text-sm text-slate-500">Loading applications…</p>
+                </div>
+              ) : searchError ? (
+                <div className="p-4">
+                  <p className="text-sm text-red-600">Error: {searchError}</p>
+                </div>
+              ) : searchResults.length === 0 ? (
+                <div className="p-4 text-center">
+                  <p className="text-sm text-slate-500">No applications found matching your criteria.</p>
+                </div>
+              ) : (
+                searchResults.map((c) => (
+                  <div key={c.reference} className="px-4 py-3 hover:bg-slate-50 transition-colors">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Link
+                            to={`/planning/${encodeURIComponent(c.reference)}`}
+                            className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 hover:underline"
+                          >
+                            {c.reference}
+                          </Link>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-600">
+                            {c.status}
+                          </span>
+                          {c.ai_analysis && (
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-purple-100 text-purple-700">
+                              AI analysed
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-slate-700 mt-1">{c.proposal}</p>
+                        <p className="text-xs text-slate-500 mt-0.5">{c.address}</p>
+                      </div>
+                      <div className="flex flex-col items-end gap-1 shrink-0">
+                        {c.ai_analysis && (
+                          <>
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-50 text-red-700" title="Impact score">
+                              Impact: {c.potential_impact_score || 0}/10
+                            </span>
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700" title="Size score">
+                              Size: {c.estimated_size || 0}/10
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Pagination */}
+            {searchPages > 1 && (
+              <div className="flex items-center justify-between px-4 py-3 border-t border-slate-200 bg-slate-50">
+                <button
+                  onClick={() => setSearchPage((p) => Math.max(1, p - 1))}
+                  disabled={searchPage <= 1}
+                  className="text-xs font-medium text-indigo-600 hover:text-indigo-800 disabled:text-slate-300 disabled:cursor-not-allowed"
+                >
+                  ← Previous
+                </button>
+                <span className="text-xs text-slate-500">
+                  Page {searchPage} of {searchPages}
+                </span>
+                <button
+                  onClick={() => setSearchPage((p) => Math.min(searchPages, p + 1))}
+                  disabled={searchPage >= searchPages}
+                  className="text-xs font-medium text-indigo-600 hover:text-indigo-800 disabled:text-slate-300 disabled:cursor-not-allowed"
+                >
+                  Next →
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* This week's applications — shown when not searching */}
+      {!hasSearch && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-slate-900">This Week's Applications</h2>
+            {!weekLoading && !weekError && (
+              <span className="text-sm text-slate-500">{weekTotal} application{weekTotal !== 1 ? 's' : ''}</span>
+            )}
+          </div>
+
+          {weekLoading ? (
+            <div className="flex items-center gap-2 py-8 justify-center">
               <svg className="h-4 w-4 animate-spin text-indigo-600" viewBox="0 0 24 24" fill="none">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
               </svg>
-              <p className="text-sm text-slate-500">Loading applications…</p>
+              <p className="text-sm text-slate-500">Loading this week's applications…</p>
             </div>
-          ) : searchError ? (
-            <div className="p-4">
-              <p className="text-sm text-red-600">Error: {searchError}</p>
+          ) : weekError ? (
+            <div className="bg-white border border-red-200 rounded-lg p-4">
+              <p className="text-sm text-red-600">Error: {weekError}</p>
             </div>
-          ) : searchResults.length === 0 ? (
-            <div className="p-4 text-center">
-              <p className="text-sm text-slate-500">No applications found matching your criteria.</p>
+          ) : weekCases.length === 0 ? (
+            <div className="bg-white border border-slate-200 rounded-lg p-8 text-center">
+              <p className="text-sm text-slate-500">No applications validated this week yet.</p>
             </div>
           ) : (
-            searchResults.map((c) => (
-              <div key={c.reference} className="px-4 py-3 hover:bg-slate-50 transition-colors">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <Link
-                        to={`/planning/${encodeURIComponent(c.reference)}`}
-                        className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 hover:underline"
-                      >
-                        {c.reference}
-                      </Link>
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-600">
-                        {c.status}
-                      </span>
-                      {c.ai_analysis && (
-                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-purple-100 text-purple-700">
-                          AI analysed
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-slate-700 mt-1">{c.proposal}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">{c.address}</p>
-                  </div>
-                  <div className="flex flex-col items-end gap-1 shrink-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {weekCases.map((c) => (
+                <Link
+                  key={c.reference}
+                  to={`/planning/${encodeURIComponent(c.reference)}`}
+                  className="block bg-white border border-slate-200 rounded-lg p-4 hover:shadow-md hover:border-indigo-200 transition-all"
+                >
+                  <div className="flex items-center gap-2 flex-wrap mb-2">
+                    <span className="text-sm font-semibold text-indigo-600">{c.reference}</span>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-600">
+                      {c.status}
+                    </span>
                     {c.ai_analysis && (
-                      <>
-                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-50 text-red-700" title="Impact score">
-                          Impact: {c.potential_impact_score || 0}/10
-                        </span>
-                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700" title="Size score">
-                          Size: {c.estimated_size || 0}/10
-                        </span>
-                      </>
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-purple-100 text-purple-700">
+                        AI analysed
+                      </span>
                     )}
                   </div>
-                </div>
-              </div>
-            ))
+                  <p className="text-sm text-slate-700 line-clamp-2">{c.proposal}</p>
+                  <p className="text-xs text-slate-500 mt-1 truncate">{c.address}</p>
+                  {c.ai_analysis && (
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-50 text-red-700">
+                        Impact: {c.potential_impact_score || 0}/10
+                      </span>
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700">
+                        Size: {c.estimated_size || 0}/10
+                      </span>
+                    </div>
+                  )}
+                </Link>
+              ))}
+            </div>
           )}
         </div>
-
-        {/* Pagination */}
-        {searchPages > 1 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-slate-200 bg-slate-50">
-            <button
-              onClick={() => setSearchPage((p) => Math.max(1, p - 1))}
-              disabled={searchPage <= 1}
-              className="text-xs font-medium text-indigo-600 hover:text-indigo-800 disabled:text-slate-300 disabled:cursor-not-allowed"
-            >
-              ← Previous
-            </button>
-            <span className="text-xs text-slate-500">
-              Page {searchPage} of {searchPages}
-            </span>
-            <button
-              onClick={() => setSearchPage((p) => Math.min(searchPages, p + 1))}
-              disabled={searchPage >= searchPages}
-              className="text-xs font-medium text-indigo-600 hover:text-indigo-800 disabled:text-slate-300 disabled:cursor-not-allowed"
-            >
-              Next →
-            </button>
-          </div>
-        )}
-      </div>
+      )}
 
       {/* Source attribution */}
       <div className="text-center">
