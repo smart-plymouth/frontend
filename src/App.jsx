@@ -33,12 +33,6 @@ function App() {
               >
                 Dashboard
               </Link>
-              <Link
-                to="/planning"
-                className="text-slate-600 hover:text-blue-900 hover:bg-slate-100 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                Planning
-              </Link>
               <a
                 href="https://github.com/smart-plymouth"
                 target="_blank"
