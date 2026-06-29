@@ -73,15 +73,19 @@ function PlanningCase() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <Link to="/hud" className="text-sm text-indigo-600 hover:underline">← Dashboard</Link>
-        <span className="text-slate-300">/</span>
-        <Link to="/planning" className="text-sm text-indigo-600 hover:underline">Planning</Link>
-        <span className="text-slate-300">/</span>
-        <span className="text-sm text-slate-700 font-medium">{c.reference}</span>
-      </div>
+      <nav className="flex items-center gap-2 text-sm">
+        <Link to="/hud" className="text-slate-400 hover:text-slate-600 transition-colors">Dashboard</Link>
+        <svg className="w-3.5 h-3.5 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+        <Link to="/planning" className="text-slate-400 hover:text-slate-600 transition-colors">Planning</Link>
+        <svg className="w-3.5 h-3.5 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+        <span className="text-slate-700 font-medium">{c.reference}</span>
+      </nav>
 
-      <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
         <div className="px-6 py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 flex items-center justify-between">
           <div>
             <h1 className="text-lg font-semibold text-white">{c.reference}</h1>

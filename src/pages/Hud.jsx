@@ -12,22 +12,24 @@ function Hud() {
   }, [])
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Page header */}
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">City Dashboard</h1>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">City Dashboard</h1>
           <p className="text-sm text-slate-500 mt-1">
-            Live data across Plymouth
+            Real-time data across Plymouth
           </p>
         </div>
-        <div className="text-right">
-          <p className="text-sm font-medium text-slate-700">
-            {time.toLocaleTimeString('en-GB')}
-          </p>
-          <p className="text-xs text-slate-500">
-            {time.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-          </p>
+        <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2 shadow-sm">
+          <div className="text-right">
+            <p className="text-sm font-mono font-medium text-slate-800 tabular-nums">
+              {time.toLocaleTimeString('en-GB')}
+            </p>
+            <p className="text-[11px] text-slate-400">
+              {time.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
+            </p>
+          </div>
         </div>
       </div>
 

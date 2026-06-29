@@ -57,31 +57,34 @@ function EmergencyWaitTimesPage() {
   return (
     <div className="space-y-6">
       {/* Breadcrumb */}
-      <nav className="text-sm text-slate-500">
-        <Link to="/hud" className="hover:text-blue-900 hover:underline">Dashboard</Link>
-        <span className="mx-2">/</span>
-        <span className="text-slate-900">Emergency Wait Times</span>
+      <nav className="flex items-center gap-2 text-sm">
+        <Link to="/hud" className="text-slate-400 hover:text-slate-600 transition-colors">Dashboard</Link>
+        <svg className="w-3.5 h-3.5 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+        <span className="text-slate-700 font-medium">Emergency Wait Times</span>
       </nav>
 
       {/* Page header */}
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">Emergency Department Wait Times</h1>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Emergency Department Wait Times</h1>
           <p className="text-sm text-slate-500 mt-1">
-            Live waiting times across Plymouth's emergency and urgent care locations.
+            Live waiting times across Plymouth's emergency and urgent care locations
           </p>
         </div>
         {latestTimestamp.getTime() > 0 && (
-          <p className="text-xs text-slate-500">
-            Last updated {latestTimestamp.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
-          </p>
+          <div className="flex items-center gap-2 text-xs text-slate-400">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            Updated {latestTimestamp.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+          </div>
         )}
       </div>
 
       {/* Content */}
       {loading && (
-        <div className="bg-white border border-slate-200 rounded-lg p-8 flex items-center justify-center gap-2">
-          <svg className="h-4 w-4 animate-spin text-teal-600" viewBox="0 0 24 24" fill="none">
+        <div className="bg-white border border-slate-200 rounded-xl p-12 flex items-center justify-center gap-2">
+          <svg className="h-5 w-5 animate-spin text-teal-500" viewBox="0 0 24 24" fill="none">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
           </svg>
@@ -90,19 +93,19 @@ function EmergencyWaitTimesPage() {
       )}
 
       {error && (
-        <div className="bg-white border border-red-200 rounded-lg p-4">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4">
           <p className="text-sm text-red-600">Error: {error}</p>
         </div>
       )}
 
       {!loading && !error && (
-        <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
-          <table className="w-full text-sm table-fixed">
+        <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+          <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50">
-                <th className="text-left font-medium px-4 py-3 text-[11px] uppercase tracking-wide text-slate-600">Location</th>
-                <th className="text-right font-medium px-4 py-3 text-[11px] uppercase tracking-wide text-slate-600 w-32">Longest Wait</th>
-                <th className="text-right font-medium px-4 py-3 text-[11px] uppercase tracking-wide text-slate-600 w-36">Patients Waiting</th>
+              <tr className="border-b border-slate-100 bg-slate-50/80">
+                <th className="text-left font-medium px-5 py-3 text-xs uppercase tracking-wider text-slate-500">Location</th>
+                <th className="text-right font-medium px-5 py-3 text-xs uppercase tracking-wider text-slate-500 w-36">Longest Wait</th>
+                <th className="text-right font-medium px-5 py-3 text-xs uppercase tracking-wider text-slate-500 w-40">Patients Waiting</th>
               </tr>
             </thead>
             <tbody>
@@ -121,27 +124,27 @@ function EmergencyWaitTimesPage() {
                 return (
                   <tr
                     key={location.id}
-                    className="border-b border-slate-100 last:border-0 hover:bg-slate-50 cursor-pointer"
+                    className="border-b border-slate-50 last:border-0 hover:bg-slate-50 cursor-pointer transition-colors"
                     onClick={() => setSelectedLocation(location)}
                   >
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
+                    <td className="px-5 py-3.5">
+                      <div className="flex items-center gap-2.5">
                         <span className={`h-2.5 w-2.5 rounded-full shrink-0 ${dotColor}`} />
-                        <span className="font-medium text-slate-800 truncate">{location.name}</span>
+                        <span className="font-medium text-slate-800">{location.name}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-right whitespace-nowrap">
+                    <td className="px-5 py-3.5 text-right whitespace-nowrap">
                       {hasData ? (
-                        <span className="font-semibold text-slate-900">{formatWait(wt.longest_wait)}</span>
+                        <span className="font-semibold text-slate-900 tabular-nums">{formatWait(wt.longest_wait)}</span>
                       ) : (
-                        <span className="text-slate-400">—</span>
+                        <span className="text-slate-300">—</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-right whitespace-nowrap">
+                    <td className="px-5 py-3.5 text-right whitespace-nowrap">
                       {hasData ? (
-                        <span className="text-slate-600">{wt.patients_waiting}</span>
+                        <span className="text-slate-600 tabular-nums">{wt.patients_waiting}</span>
                       ) : (
-                        <span className="text-slate-400">—</span>
+                        <span className="text-slate-300">—</span>
                       )}
                     </td>
                   </tr>
@@ -150,12 +153,12 @@ function EmergencyWaitTimesPage() {
             </tbody>
           </table>
 
-          <div className="px-4 py-3 border-t border-slate-200 bg-slate-50">
+          <div className="px-5 py-3 border-t border-slate-100 bg-slate-50/50">
             <a
               href="https://www.plymouthhospitals.nhs.uk/urgent-waiting-times/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-slate-500 hover:text-slate-700 hover:underline"
+              className="text-xs text-slate-400 hover:text-slate-600 hover:underline transition-colors"
             >
               Source: Plymouth Hospitals NHS Trust
             </a>
