@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 html {
   scroll-behavior: smooth;
@@ -7,6 +8,64 @@ html {
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Letter content rendered from markdown → HTML */
+.letter-content h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #1e293b;
+}
+.letter-content h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #1e293b;
+}
+.letter-content h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #1e293b;
+}
+.letter-content p {
+  margin-bottom: 1rem;
+}
+.letter-content p:last-child {
+  margin-bottom: 0;
+}
+.letter-content ul,
+.letter-content ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+.letter-content ul {
+  list-style-type: disc;
+}
+.letter-content ol {
+  list-style-type: decimal;
+}
+.letter-content li {
+  margin-bottom: 0.25rem;
+}
+.letter-content hr {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 1.5rem 0;
+}
+.letter-content strong {
+  font-weight: 700;
+}
+.letter-content em {
+  font-style: italic;
+}
+.letter-content blockquote {
+  border-left: 4px solid #cbd5e1;
+  padding-left: 1rem;
+  font-style: italic;
+  color: #64748b;
+  margin-bottom: 1rem;
 }
 
 /* Subtle focus ring for interactive elements */
