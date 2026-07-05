@@ -7,6 +7,7 @@ import PlanningCase from './pages/PlanningCase.jsx'
 import PlanningTracker from './pages/PlanningTracker.jsx'
 import BirdMonitoringExplore from './pages/BirdMonitoringExplore.jsx'
 import EmergencyWaitTimesPage from './pages/EmergencyWaitTimes.jsx'
+import Phase10Campaign from './pages/Phase10Campaign.jsx'
 
 function NavLink({ to, children }) {
   const { pathname } = useLocation()
@@ -101,6 +102,7 @@ function App() {
           <Route path="/hud" element={<Hud />} />
           <Route path="/planning" element={<Planning />} />
           <Route path="/planning/tracker" element={<PlanningTracker />} />
+          <Route path="/planning/phase10-campaign" element={<Phase10Campaign />} />
           <Route path="/planning/:reference" element={<PlanningCase />} />
           <Route path="/emergency-wait-times" element={<EmergencyWaitTimesPage />} />
           <Route path="/bird-monitoring" element={<BirdMonitoringExplore />} />
