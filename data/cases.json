@@ -1,0 +1,128 @@
+[
+  {
+    "reference": "26/00890/ERS103",
+    "type": "Reserved Matters",
+    "title": "EIA Screening Opinion for Phase 10 Saltram Meadow comprising up to 260 dwellings, associated infrastructure and works",
+    "description": "EIA Screening Opinion for Phase 10 Saltram Meadow comprising up to 260 dwellings, associated infrastructure and works",
+    "campaign": "Persimmon Billacombe"
+  },
+  {
+    "reference": "26/00181/ENF",
+    "type": "Enforcement",
+    "title": "Alleged breach of planning conditions regarding access.",
+    "description": "Access to fields from Colesdown Hill with plant and other construction related machinery despite access restriction being a condition of the outline planning consent. 4th June 2026, 3rd June 2026, 26th May 2026.",
+    "campaign": "Persimmon Billacombe"
+  },
+  {
+    "reference": "26/00031/ENF",
+    "type": "Enforcement",
+    "title": "Alleged unauthorised development (Traveller's Site, Colesdown Hill)",
+    "description": "Alleged unauthorised development commencing works prior to all required pre-commencement conditions of the application being met.",
+    "campaign": "Traveller Site Billacombe"
+  },
+  {
+    "reference": "26/00173/ENF",
+    "type": "Enforcement",
+    "title": "Alleged breach of planning conditions requiring completion of ecological surveys.",
+    "description": "Saltram Meadows Phase 9 according to their own ecology report appear to have cleared potentially Section 41 habitat prior to completing ecological survey.",
+    "campaign": "Persimmon Billacombe"
+  },
+  {
+    "reference": "PENDING",
+    "type": "Enforcement",
+    "title": "Alleged unauthorised development (Boon's Place Flats)",
+    "description": "Alleged unauthorised development of permeable green verge into non permeable concrete verge at rear of Boon's Place flats approx 15m^2, North Road West. Query drainage policy and loss of visual amenity.",
+    "campaign": "STRAW"
+  },
+  {
+    "reference": "26/00167/ENF",
+    "type": "Enforcement",
+    "title": "Alleged survey activity disturbing nesting birds",
+    "description": "In relation to UXO surveying dragging geophysics equipment around the top field with seemingly no ecological regard for ground nesting birds such as Skylarks and Wrens which have been identified in the field.",
+    "campaign": "Persimmon Billacombe"
+  },
+  {
+    "reference": "26/00127/ENF",
+    "type": "Enforcement",
+    "title": "Alleged breach of planning conditions relating to the old Lime Kilns",
+    "description": "Enforcement case in relation to the unknown wereabouts of the Lime Kiln stone which had a condition for reuse during the development of Saltram Meadows, seemingly nowhere to be seen.",
+    "campaign": "Persimmon Billacombe"
+  },
+  {
+    "reference": "26/00381/REM",
+    "type": "Reserved Matters",
+    "title": "Saltram Meadows Phase 9",
+    "description": "Reserved Matters application for approval of access, appearance, landscaping, layout and scale further to outline consent 07/01094/OUT (EIA Development) for residential development of Phase 9 comprising 134 dwellings (including affordable homes) and associated infrastructure and works, and the partial discharge (pertaining to phase 9 only) of planning conditions 37 (Travel Plan) and 38 (Car Parking Strategy) of 07/01094/OUT",
+    "campaign": "Persimmon Billacombe"
+  },
+  {
+    "reference": "26/00374/FUL",
+    "type": "Full",
+    "title": "Saltram Meadows ALDI Supermarket",
+    "description": "Construction of retail store (Class E) and associated parking, servicing arrangements, landscaping, public realm, modifications to existing vehicle access from Encombe Street and associated works",
+    "campaign": "Persimmon Billacombe"
+  },
+  {
+    "reference": "26/00297/REM",
+    "type": "Reserved Matters",
+    "title": "Saltram Meadows Main Square",
+    "description": "Reserved Matters (access, appearance, landscaping, layout and scale) further to outline consent 07/01094/OUT for the provision of a Main Square comprising of two central buildings with ground-floor community health floorspace, ground-floor retail floorspace, 47 apartments above, Public Realm including a Neighbourhood Equipped Area of Play, an amphitheatre, a pavilion, car parking, landscaping and associated works.",
+    "campaign": "Persimmon Billacombe"
+  },
+  {
+    "reference": "25/00963/MJR",
+    "type": "Pre-Application",
+    "title": "Saltram Meadows Update Strategic Masterplan",
+    "description": "Pre-app for the submission of an updated revised Strategic Masterplan",
+    "campaign": "Persimmon Billacombe"
+  },
+  {
+    "reference": "24/00979/MJR",
+    "type": "Pre-Application",
+    "title": "Saltram Meadows Phase 9",
+    "description": "Pre-application for Phase 9 of Saltram Meadows consisting of 156 dwellings of which 129 are open market and 27 are affordable together with associated infrastructure and open space.",
+    "campaign": "Persimmon Billacombe"
+  },
+  {
+    "reference": "26/00298/CDM",
+    "type": "Condition Discharge",
+    "title": "Condition Discharge: Condition 3 (Lighting Design Strategy) of applcation 22/01959/FUL",
+    "description": "Condition Discharge: Condition 3 (Lighting Design Strategy) of applcation 22/01959/FUL",
+    "campaign": "Traveller Site Billacombe"
+  },
+  {
+    "reference": "07/01094/OUT",
+    "type": "Outline",
+    "title": "Saltram Meadows Outline Planning Application",
+    "description": "Up to 1,684 new homes with none built in the Saltram Registered Parkland and at a net density of approximately 50 dwellings per hectare, with 12.35 per cent affordable housing (208 homes in total).",
+    "campaign": "Persimmon Billacombe"
+  },
+  {
+    "reference": "22/01959/FUL",
+    "type": "Full",
+    "title": "Change of use of the land to a private Gypsy and Traveller caravan site consisting of 2no mobile homes, car parking and associated development",
+    "description": "Change of use of the land to a private Gypsy and Traveller caravan site consisting of 2no mobile homes, car parking and associated development",
+    "campaign": "Traveller Site Billacombe"
+  },
+  {
+    "reference": "25/01083/ADV",
+    "type": "Retrospective",
+    "title": "3no illuminated signs (retrospective) and illuminated totem sign",
+    "description": "Retrospective planning consent for BYD signage with conditions relating to it's brightness and hours of operation.",
+    "campaign": "BYD Billacombe"
+  },
+  {
+    "reference": "25/00173/ENF",
+    "type": "Enforcement",
+    "title": "Alleged High intensity illuminated signage installed without prior planning consent",
+    "description": "Installation of brightly lit signage without planning consent, sometimes left on 24/7 causing unacceptable light levels in neighbouring properties.",
+    "campaign": "BYD Billacombe"
+  },
+  {
+    "reference": "24/00360/FUL",
+    "type": "Full",
+    "title": "Change of use of a car showroom and workshop (Sui Generis) to garage and MOT centre (Use Class B2) and external alterations including single storey rear extensions",
+    "description": "Change of use for Mini garage to Kwikfit MOT centre.",
+    "campaign": "Kwikfit Billacombe"
+  }
+]

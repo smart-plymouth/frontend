@@ -4,6 +4,7 @@ import Home from './pages/Home.jsx'
 import Hud from './pages/Hud.jsx'
 import Planning from './pages/Planning.jsx'
 import PlanningCase from './pages/PlanningCase.jsx'
+import PlanningTracker from './pages/PlanningTracker.jsx'
 import BirdMonitoringExplore from './pages/BirdMonitoringExplore.jsx'
 import EmergencyWaitTimesPage from './pages/EmergencyWaitTimes.jsx'
 
@@ -99,6 +100,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/hud" element={<Hud />} />
           <Route path="/planning" element={<Planning />} />
+          <Route path="/planning/tracker" element={<PlanningTracker />} />
           <Route path="/planning/:reference" element={<PlanningCase />} />
           <Route path="/emergency-wait-times" element={<EmergencyWaitTimesPage />} />
           <Route path="/bird-monitoring" element={<BirdMonitoringExplore />} />
