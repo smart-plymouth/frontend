@@ -1,5 +1,103 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+
+const API_BASE = 'https://api.smartplymouth.org/api/planning/v1.0'
+
+function EmailSignup() {
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState('idle') // idle | submitting | success | error | conflict
+  const [errorMsg, setErrorMsg] = useState('')
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setStatus('submitting')
+    setErrorMsg('')
+
+    try {
+      const res = await fetch(`${API_BASE}/phaseten_email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim() }),
+      })
+
+      if (res.status === 201) {
+        setStatus('success')
+        setEmail('')
+      } else if (res.status === 409) {
+        setStatus('conflict')
+      } else {
+        const data = await res.json().catch(() => ({}))
+        setErrorMsg(data.error || 'Something went wrong. Please try again.')
+        setStatus('error')
+      }
+    } catch {
+      setErrorMsg('Unable to connect. Please check your internet connection and try again.')
+      setStatus('error')
+    }
+  }
+
+  if (status === 'success') {
+    return (
+      <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 max-w-lg mx-auto">
+        <div className="text-3xl mb-2">✅</div>
+        <p className="text-white font-semibold">You're registered!</p>
+        <p className="text-sm text-red-100 mt-1">We'll email you as soon as the reserved matters application is submitted.</p>
+      </div>
+    )
+  }
+
+  if (status === 'conflict') {
+    return (
+      <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 max-w-lg mx-auto">
+        <div className="text-3xl mb-2">👍</div>
+        <p className="text-white font-semibold">Already registered</p>
+        <p className="text-sm text-red-100 mt-1">This email address is already on our notification list. We'll be in touch when the application is submitted.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 max-w-lg mx-auto">
+      <h4 className="font-semibold text-white text-lg mb-2">Get Notified</h4>
+      <p className="text-sm text-red-100 mb-4 text-left leading-relaxed">
+        Register your email address to be notified when the reserved matters application for Saltram Meadow Phase 10 is submitted. Your email address will not be shared with any third parties and will be used solely by Smart Plymouth for the purpose of sending three notification emails:
+      </p>
+      <ul className="text-sm text-red-100 mb-4 text-left space-y-1 list-disc list-inside">
+        <li>When the reserved matters application is submitted by the applicant</li>
+        <li>A reminder to submit an objection 7 days before the public comments expiry date</li>
+        <li>A final reminder 3 days before the expiry date</li>
+      </ul>
+      <p className="text-sm text-red-100 mb-5 text-left leading-relaxed">
+        After these three emails have been sent, your email address will be securely erased from the Smart Plymouth system.
+      </p>
+
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+        <label htmlFor="phase10-email" className="sr-only">Email address</label>
+        <input
+          id="phase10-email"
+          type="email"
+          required
+          placeholder="Your email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          disabled={status === 'submitting'}
+          className="flex-1 px-4 py-3 rounded-lg bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white disabled:opacity-60"
+        />
+        <button
+          type="submit"
+          disabled={status === 'submitting'}
+          className="px-6 py-3 bg-white text-red-800 font-bold rounded-lg hover:bg-red-50 transition-colors text-sm disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {status === 'submitting' ? 'Registering…' : 'Notify Me'}
+        </button>
+      </form>
+
+      {status === 'error' && (
+        <p className="text-sm text-red-200 mt-3">{errorMsg}</p>
+      )}
+    </div>
+  )
+}
 
 export default function Phase10Campaign() {
   useEffect(() => {
@@ -360,36 +458,12 @@ export default function Phase10Campaign() {
       <section id="take-action" className="bg-gradient-to-br from-red-700 to-red-900 text-white py-16 px-6 sm:px-10 lg:px-16">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">Take Action</h2>
-          <p className="text-red-100 text-lg mb-10 leading-relaxed">
-            The planning process gives every resident a voice. Use yours. Object to Phase 10 and help protect the wildlife and heritage on our doorstep.
+          <p className="text-red-100 text-lg mb-6 leading-relaxed">
+            The reserved matters application for Phase 10 has not yet been submitted to Plymouth City Council. Register your email address below and we will notify you the moment it is submitted so you can act quickly to object.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto mb-10">
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-5 text-left">
-              <div className="text-2xl mb-2">📝</div>
-              <h4 className="font-semibold text-white mb-1">Submit an Objection</h4>
-              <p className="text-sm text-red-100 text-justify">Email <span className="font-medium text-white">planningconsents@plymouth.gov.uk</span> with the planning reference number in the subject line and your objections in the body. You may use the list of reasons to object provided below to help you write your email.</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-5 text-left">
-              <div className="text-2xl mb-2">📣</div>
-              <h4 className="font-semibold text-white mb-1">Spread the Word</h4>
-              <p className="text-sm text-red-100 text-justify">Share this page with neighbours and community groups. The more voices, the greater the impact on the decision.</p>
-            </div>
-          </div>
+          <EmailSignup />
 
-          <a
-            href="https://planning.plymouth.gov.uk/online-applications/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-3.5 bg-white text-red-800 font-bold rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all text-sm"
-          >
-            Visit the Planning Portal
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-              <polyline points="15 3 21 3 21 9" />
-              <line x1="10" y1="14" x2="21" y2="3" />
-            </svg>
-          </a>
         </div>
       </section>
 
