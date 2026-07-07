@@ -489,7 +489,7 @@ export default function Phase10Campaign() {
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Developer's Track Record</h4>
-              <p className="text-sm text-slate-600">Persimmon's history of breaching planning conditions, clearing habitat before survey, and losing heritage assets on this very estate demonstrates they cannot be trusted to comply with ecological protections.</p>
+              <p className="text-sm text-slate-600">Persimmon's history of alleged breaches of planning conditions, alleged clearance of habitat before survey, and the apparent loss of heritage assets on this very estate raises serious questions about whether they can be relied upon to comply with ecological protections.</p>
               <PolicyReferences policies="NPPF Paragraph 11, Item d; NPPF Paragraph 44; JLP Policy DEV1" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
@@ -499,7 +499,7 @@ export default function Phase10Campaign() {
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Biodiversity Loss and Net Gain</h4>
-              <p className="text-sm text-slate-600">The premature clearance of Section 41 priority habitat on Phase 9 — now under enforcement investigation — sets a dangerous precedent. Under the Environment Act 2021, developments must deliver a minimum 10% biodiversity net gain, yet Persimmon's track record of clearing habitat before ecological survey provides no confidence this requirement would be genuinely met rather than circumvented.</p>
+              <p className="text-sm text-slate-600">The alleged premature clearance of Section 41 priority habitat on Phase 9 — now under enforcement investigation — sets a dangerous precedent. Under the Environment Act 2021, developments must deliver a minimum 10% biodiversity net gain, yet Persimmon's track record of alleged habitat clearance before ecological survey provides no confidence this requirement would be genuinely met rather than circumvented.</p>
               <PolicyReferences policies="NPPF Paragraph 186, Item d; NPPF Paragraph 189, Item a; NPPF Paragraph 190; JLP Policy SPT12; JLP Policy DEV26, Item 5" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
@@ -539,7 +539,7 @@ export default function Phase10Campaign() {
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Construction Phase Impacts on Protected Sites</h4>
-              <p className="text-sm text-slate-600">Vibration, dust, and temporary drainage during the construction phase itself — not just the permanent development — could directly harm the adjacent SSSI and County Wildlife Site. Persimmon's repeated breaches of Construction Environmental Management Plans on earlier phases provide no confidence these risks would be properly managed.</p>
+              <p className="text-sm text-slate-600">Vibration, dust, and temporary drainage during the construction phase itself — not just the permanent development — could directly harm the adjacent SSSI and County Wildlife Site. Persimmon's alleged repeated breaches of Construction Environmental Management Plans on earlier phases provide no confidence these risks would be properly managed.</p>
               <PolicyReferences policies="NPPF Paragraph 192, Item c; NPPF Paragraph 193; JLP Policy DEV26; JLP Policy DEV2" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
