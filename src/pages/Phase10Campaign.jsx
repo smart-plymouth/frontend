@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import PolicyReferences from '../components/PolicyTooltip'
 
 const API_BASE = 'https://api.smartplymouth.org/api/planning/v1.0'
 
@@ -479,66 +480,82 @@ export default function Phase10Campaign() {
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Impact on Adjacent Wildlife Sites</h4>
               <p className="text-sm text-slate-600">Development adjacent to Billacombe Green SSSI and Pomphlett Plantation County Wildlife Site risks pollution run-off, habitat fragmentation, and disturbance to legally protected species. Increased noise, artificial lighting, domestic pets, and footfall from new housing would degrade these sites and sever ecological corridors connecting them.</p>
+              <PolicyReferences policies="NPPF Paragraph 186, Item a; NPPF Paragraph 187; NPPF Paragraph 192, Items a–d; JLP Policy SPT12; JLP Policy DEV26" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Harm to the Setting of Saltram</h4>
               <p className="text-sm text-slate-600">Modern housing visible from within the Grade I listed Saltram parkland would harm the heritage significance and visual character of this National Trust landscape.</p>
+              <PolicyReferences policies="NPPF Paragraph 205; NPPF Paragraph 208; NPPF Paragraph 212, Item a; JLP Policy SPT11; JLP Policy DEV21" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Developer's Track Record</h4>
               <p className="text-sm text-slate-600">Persimmon's history of breaching planning conditions, clearing habitat before survey, and losing heritage assets on this very estate demonstrates they cannot be trusted to comply with ecological protections.</p>
+              <PolicyReferences policies="NPPF Paragraph 11, Item d; NPPF Paragraph 44; JLP Policy DEV1" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Inadequate Infrastructure</h4>
               <p className="text-sm text-slate-600">Local roads, schools, and medical services are already under significant pressure from earlier phases. The road network serving the site — including Billacombe Road and Pomphlett Road — is at capacity during peak hours, and there is a lack of suitable bus routes or other public transport provision serving the estate. Phase 10 would add further demand without adequate upgrades to highways, transport links, or community services.</p>
+              <PolicyReferences policies="NPPF Paragraph 114, Items a–b; NPPF Paragraph 115; NPPF Paragraph 116; JLP Policy SPT9; JLP Policy DEV31; JLP Policy DEV32" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Biodiversity Loss and Net Gain</h4>
               <p className="text-sm text-slate-600">The premature clearance of Section 41 priority habitat on Phase 9 — now under enforcement investigation — sets a dangerous precedent. Under the Environment Act 2021, developments must deliver a minimum 10% biodiversity net gain, yet Persimmon's track record of clearing habitat before ecological survey provides no confidence this requirement would be genuinely met rather than circumvented.</p>
+              <PolicyReferences policies="NPPF Paragraph 186, Item d; NPPF Paragraph 189, Item a; NPPF Paragraph 190; JLP Policy SPT12; JLP Policy DEV26, Item 5" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Overdevelopment and Density</h4>
               <p className="text-sm text-slate-600">The estate already prioritises housing numbers over community amenities. Further high-density development would compound existing problems with lack of green space and facilities.</p>
+              <PolicyReferences policies="NPPF Paragraph 131; NPPF Paragraph 135, Items a, c; JLP Policy DEV20; JLP Policy SPT3, Item 3" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Environmental Impact Assessment</h4>
               <p className="text-sm text-slate-600">Given the proximity to an SSSI, a County Wildlife Site, and a heritage landscape, a full Environmental Impact Assessment should be required — not screened out.</p>
+              <PolicyReferences policies="NPPF Paragraph 11, Item b; NPPF Paragraph 186; Town and Country Planning (Environmental Impact Assessment) Regulations 2017, Schedule 2" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Lack of Cumulative Impact Assessment</h4>
               <p className="text-sm text-slate-600">Other major developments in the area — such as Sherford — are adding significant burden to local infrastructure. Phase 10 has not been assessed cumulatively alongside these projects, meaning the true combined impact on roads, schools, and services is not being properly considered.</p>
+              <PolicyReferences policies="NPPF Paragraph 11, Item b; NPPF Paragraph 116, Item b; JLP Policy SPT1; JLP Policy SPT2" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Scale and Character Out of Keeping</h4>
               <p className="text-sm text-slate-600">The scale and style of the proposed development does not conform to the neighbouring 1920s and 1930s bungalows of Colesdown Hill. The introduction of high-density modern housing would be visually incongruous and harmful to the established residential character of the area.</p>
+              <PolicyReferences policies="NPPF Paragraph 135, Items b–c; NPPF Paragraph 139, Item a; JLP Policy DEV20, Items 1–4; JLP Policy DEV23" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Drainage and Flood Risk</h4>
               <p className="text-sm text-slate-600">Residents on existing phases already report drainage problems. Further development on greenfield land increases impermeable surface area, raising the risk of surface water flooding and pollution run-off into adjacent watercourses and the nearby SSSI.</p>
+              <PolicyReferences policies="NPPF Paragraph 173; NPPF Paragraph 175; NPPF Paragraph 180, Item a; JLP Policy DEV35; JLP Policy DEV37" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Designing Out Crime</h4>
               <p className="text-sm text-slate-600">The estate already suffers from antisocial behaviour, fly-tipping, arson, and drug use. The layout and design of Phase 10 must demonstrate how it would avoid creating further secluded areas, poor natural surveillance, and the conditions that have enabled crime and disorder on earlier phases.</p>
+              <PolicyReferences policies="NPPF Paragraph 135, Item f; JLP Policy DEV20, Item 8; JLP Policy DEV10" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Loss of Public Access and Recreation Space</h4>
               <p className="text-sm text-slate-600">The Phase 10 land is currently used as amenity space by local residents for walking between Billacombe Road, Colesdown Hill and Wixenford, as well as for recreational purposes including dog walking and exercise. Its loss would remove a valued green corridor connecting neighbouring communities.</p>
+              <PolicyReferences policies="NPPF Paragraph 96; NPPF Paragraph 103, Item b; JLP Policy DEV3; JLP Policy DEV27" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Construction Phase Impacts on Protected Sites</h4>
               <p className="text-sm text-slate-600">Vibration, dust, and temporary drainage during the construction phase itself — not just the permanent development — could directly harm the adjacent SSSI and County Wildlife Site. Persimmon's repeated breaches of Construction Environmental Management Plans on earlier phases provide no confidence these risks would be properly managed.</p>
+              <PolicyReferences policies="NPPF Paragraph 192, Item c; NPPF Paragraph 193; JLP Policy DEV26; JLP Policy DEV2" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Noise and Light Pollution on Wildlife</h4>
               <p className="text-sm text-slate-600">Permanent residential lighting and noise from 200+ homes adjacent to the SSSI and CWS would disrupt nocturnal species including legally protected bats, owls, and invertebrates. Light spill is a recognised cause of habitat degradation and behavioural disruption in sensitive ecological areas.</p>
+              <PolicyReferences policies="NPPF Paragraph 192, Item d; NPPF Paragraph 191; JLP Policy DEV2; JLP Policy DEV26, Item 3" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Air Quality</h4>
               <p className="text-sm text-slate-600">Increased vehicle movements from additional homes would worsen localised air pollution. Nitrogen deposition from traffic is a known threat to species-rich calcareous grasslands like those at Billacombe Green, potentially degrading the very habitats the SSSI designation is meant to protect.</p>
+              <PolicyReferences policies="NPPF Paragraph 191; NPPF Paragraph 192, Item d; JLP Policy DEV2, Item 4; JLP Policy DEV26" />
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <h4 className="font-semibold text-slate-900 mb-2">Residential Amenity of Existing Residents</h4>
               <p className="text-sm text-slate-600">Properties on Colesdown Hill, Billacombe Road, and Wixenford that currently back onto open land would suffer overlooking, loss of privacy, and loss of outlook. The transition from open green space to a built-up housing estate would significantly diminish the residential amenity these homes have enjoyed for decades.</p>
+              <PolicyReferences policies="NPPF Paragraph 135, Item f; NPPF Paragraph 139, Item c; JLP Policy DEV1; JLP Policy DEV20, Item 5" />
             </div>
           </div>
         </div>
