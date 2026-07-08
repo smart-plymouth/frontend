@@ -423,7 +423,7 @@ export default function Phase10Campaign() {
 
           <div className="space-y-4">
             <Link
-              to="/planning/26%2F00893%2FMJR"
+              to="https://planning.plymouth.gov.uk/online-applications/applicationDetails.do?activeTab=summary&keyVal=TH4MJUMM04Q00"
               className="block bg-slate-50 border border-slate-200 rounded-xl p-5 hover:border-indigo-300 hover:shadow-md transition-all group"
             >
               <div className="flex items-center gap-2 flex-wrap mb-2">
@@ -438,7 +438,7 @@ export default function Phase10Campaign() {
             </Link>
 
             <Link
-              to="/planning/26%2F00890%2FERS103"
+              to="https://planning.plymouth.gov.uk/online-applications/applicationDetails.do?activeTab=summary&keyVal=TH2VT1MM05L00"
               className="block bg-slate-50 border border-slate-200 rounded-xl p-5 hover:border-indigo-300 hover:shadow-md transition-all group"
             >
               <div className="flex items-center gap-2 flex-wrap mb-2">
