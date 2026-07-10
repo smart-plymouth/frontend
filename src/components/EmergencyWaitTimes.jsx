@@ -21,9 +21,14 @@ function EmergencyWaitTimes() {
       if (!locRes.ok) throw new Error('Failed to fetch locations')
       const locs = await locRes.json()
 
+      const now = new Date()
+      const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000)
+      const start = oneHourAgo.toISOString()
+      const end = now.toISOString()
+
       const waitTimeEntries = await Promise.all(
         locs.map(async (loc) => {
-          const res = await fetch(`${API_BASE}/locations/${loc.id}/wait-times`)
+          const res = await fetch(`${API_BASE}/locations/${loc.id}/wait-times?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`)
           if (!res.ok) return null
           const data = await res.json()
           return data.length > 0 ? data[0] : null

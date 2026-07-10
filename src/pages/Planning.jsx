@@ -129,28 +129,6 @@ function Planning() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Link
-            to="/planning/tracker"
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-600 hover:text-indigo-800 border border-indigo-200 rounded-lg px-3 py-1.5 hover:bg-indigo-50 transition-colors"
-          >
-            <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-              <polyline points="14 2 14 8 20 8" />
-              <line x1="16" y1="13" x2="8" y2="13" />
-              <line x1="16" y1="17" x2="8" y2="17" />
-            </svg>
-            Case Tracker
-          </Link>
-          <Link
-            to="/planning/phase10-campaign"
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-600 hover:text-indigo-800 border border-indigo-200 rounded-lg px-3 py-1.5 hover:bg-indigo-50 transition-colors"
-          >
-            <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 3v18h18" />
-              <path d="M7 16l4-4 4 4 5-5" />
-            </svg>
-            Saltram Meadows Phase 10 Campaign
-          </Link>
           <a
             href="https://planning.plymouth.gov.uk/online-applications/"
             target="_blank"

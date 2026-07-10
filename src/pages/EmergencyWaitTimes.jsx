@@ -24,9 +24,14 @@ function EmergencyWaitTimesPage() {
       const locs = await locRes.json()
       setLocations(locs)
 
+      const now = new Date()
+      const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000)
+      const start = oneHourAgo.toISOString()
+      const end = now.toISOString()
+
       const waitTimeEntries = await Promise.all(
         locs.map(async (loc) => {
-          const res = await fetch(`${API_BASE}/locations/${loc.id}/wait-times`)
+          const res = await fetch(`${API_BASE}/locations/${loc.id}/wait-times?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`)
           if (!res.ok) return [loc.id, null]
           const data = await res.json()
           return [loc.id, data.length > 0 ? data[0] : null]
