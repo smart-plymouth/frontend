@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom'
 
 const API_BASE = 'https://api.smartplymouth.org/api/air-quality/v1.0'
 
-// AQI breakpoints based on UK DAQI (Daily Air Quality Index) simplified bands
-// Each pollutant maps value ranges (µg/m³) to index scores 1-10
-const AQI_BREAKPOINTS = {
+// DEFRA DAQI breakpoints — based on 24-hour mean concentrations (µg/m³)
+const DAQI_BREAKPOINTS = {
   'PM2.5': [
     { low: 0, high: 11, index: 1 },
     { low: 12, high: 23, index: 2 },
@@ -30,46 +29,10 @@ const AQI_BREAKPOINTS = {
     { low: 92, high: 100, index: 9 },
     { low: 101, high: Infinity, index: 10 },
   ],
-  'NO2': [
-    { low: 0, high: 67, index: 1 },
-    { low: 68, high: 134, index: 2 },
-    { low: 135, high: 200, index: 3 },
-    { low: 201, high: 267, index: 4 },
-    { low: 268, high: 334, index: 5 },
-    { low: 335, high: 400, index: 6 },
-    { low: 401, high: 467, index: 7 },
-    { low: 468, high: 534, index: 8 },
-    { low: 535, high: 600, index: 9 },
-    { low: 601, high: Infinity, index: 10 },
-  ],
-  'O3': [
-    { low: 0, high: 33, index: 1 },
-    { low: 34, high: 66, index: 2 },
-    { low: 67, high: 100, index: 3 },
-    { low: 101, high: 120, index: 4 },
-    { low: 121, high: 140, index: 5 },
-    { low: 141, high: 160, index: 6 },
-    { low: 161, high: 187, index: 7 },
-    { low: 188, high: 213, index: 8 },
-    { low: 214, high: 240, index: 9 },
-    { low: 241, high: Infinity, index: 10 },
-  ],
-  'SO2': [
-    { low: 0, high: 88, index: 1 },
-    { low: 89, high: 177, index: 2 },
-    { low: 178, high: 266, index: 3 },
-    { low: 267, high: 354, index: 4 },
-    { low: 355, high: 443, index: 5 },
-    { low: 444, high: 532, index: 6 },
-    { low: 533, high: 710, index: 7 },
-    { low: 711, high: 887, index: 8 },
-    { low: 888, high: 1064, index: 9 },
-    { low: 1065, high: Infinity, index: 10 },
-  ],
 }
 
 function getPollutantIndex(pollutant, value) {
-  const breakpoints = AQI_BREAKPOINTS[pollutant]
+  const breakpoints = DAQI_BREAKPOINTS[pollutant]
   if (!breakpoints) return null
   for (const bp of breakpoints) {
     if (value >= bp.low && value <= bp.high) return bp.index
@@ -77,22 +40,12 @@ function getPollutantIndex(pollutant, value) {
   return 10
 }
 
-function calculateAQI(metrics) {
-  const indices = metrics
-    .map((m) => getPollutantIndex(m.pollutant, m.value))
-    .filter((i) => i !== null)
-
-  if (indices.length === 0) return null
-  // AQI is the maximum sub-index across all pollutants
-  return Math.max(...indices)
-}
-
-function getAQIBand(aqi) {
-  if (aqi === null) return { label: 'Unknown', color: 'slate', bg: 'bg-slate-50', text: 'text-slate-600' }
-  if (aqi <= 3) return { label: 'Excellent', color: 'green', bg: 'bg-green-50', text: 'text-green-700', dot: 'bg-green-400' }
-  if (aqi <= 6) return { label: 'Good', color: 'blue', bg: 'bg-blue-50', text: 'text-blue-700', dot: 'bg-blue-400' }
-  if (aqi <= 8) return { label: 'Average', color: 'amber', bg: 'bg-amber-50', text: 'text-amber-700', dot: 'bg-amber-400' }
-  return { label: 'Poor', color: 'red', bg: 'bg-red-50', text: 'text-red-700', dot: 'bg-red-400' }
+function getDAQIBand(daqi) {
+  if (daqi === null) return { label: 'Unknown', bg: 'bg-slate-50', text: 'text-slate-600' }
+  if (daqi <= 3) return { label: 'Excellent', bg: 'bg-green-50', text: 'text-green-700' }
+  if (daqi <= 6) return { label: 'Good', bg: 'bg-blue-50', text: 'text-blue-700' }
+  if (daqi <= 8) return { label: 'Average', bg: 'bg-amber-50', text: 'text-amber-700' }
+  return { label: 'Poor', bg: 'bg-red-50', text: 'text-red-700' }
 }
 
 function getPollutantColor(pollutant, value) {
@@ -105,11 +58,11 @@ function getPollutantColor(pollutant, value) {
 }
 
 function AirQuality() {
-  const [aqi, setAqi] = useState(null)
+  const [daqi, setDaqi] = useState(null)
   const [band, setBand] = useState(null)
-  const [pm25, setPm25] = useState(null)
-  const [pm10, setPm10] = useState(null)
-  const [readingTime, setReadingTime] = useState(null)
+  const [pm25Mean, setPm25Mean] = useState(null)
+  const [pm10Mean, setPm10Mean] = useState(null)
+  const [lastUpdated, setLastUpdated] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -121,30 +74,63 @@ function AirQuality() {
 
   async function fetchData() {
     try {
-      const today = new Date().toISOString().split('T')[0]
-      const res = await fetch(
-        `${API_BASE}/readings?from_date=${today}&to_date=${today}&per_page=1`
-      )
-      if (!res.ok) throw new Error('Failed to fetch air quality data')
-      const data = await res.json()
+      // Fetch last 24 hours of readings across all sites
+      const now = new Date()
+      const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+      const fromDate = yesterday.toISOString().split('T')[0]
+      const toDate = now.toISOString().split('T')[0]
 
-      if (data.readings && data.readings.length > 0) {
-        const latest = data.readings[0]
-        const score = calculateAQI(latest.metrics)
-        setAqi(score)
-        setBand(getAQIBand(score))
-        setReadingTime(new Date(latest.datetime))
+      // Fetch all pages of readings from the last 24 hours
+      const allReadings = []
+      let currentPage = 1
+      let totalPages = 1
 
-        const pm25Metric = latest.metrics.find((m) => m.pollutant === 'PM2.5')
-        const pm10Metric = latest.metrics.find((m) => m.pollutant === 'PM10')
-        setPm25(pm25Metric ? pm25Metric.value : null)
-        setPm10(pm10Metric ? pm10Metric.value : null)
-      } else {
-        setAqi(null)
-        setBand(getAQIBand(null))
-        setPm25(null)
-        setPm10(null)
+      while (currentPage <= totalPages) {
+        const res = await fetch(
+          `${API_BASE}/readings?from_date=${fromDate}&to_date=${toDate}&per_page=100&page=${currentPage}`
+        )
+        if (!res.ok) throw new Error('Failed to fetch air quality data')
+        const data = await res.json()
+        allReadings.push(...data.readings)
+        totalPages = data.pages
+        currentPage++
       }
+
+      // Filter to only readings within the last 24 hours
+      const cutoff = now.getTime() - 24 * 60 * 60 * 1000
+      const recent = allReadings.filter((r) => new Date(r.datetime).getTime() >= cutoff)
+
+      // Calculate 24-hour mean for PM2.5 and PM10
+      const pm25Values = []
+      const pm10Values = []
+
+      for (const reading of recent) {
+        for (const metric of reading.metrics) {
+          if (metric.pollutant === 'PM2.5') pm25Values.push(metric.value)
+          if (metric.pollutant === 'PM10') pm10Values.push(metric.value)
+        }
+      }
+
+      const pm25Avg = pm25Values.length > 0
+        ? pm25Values.reduce((sum, v) => sum + v, 0) / pm25Values.length
+        : null
+      const pm10Avg = pm10Values.length > 0
+        ? pm10Values.reduce((sum, v) => sum + v, 0) / pm10Values.length
+        : null
+
+      setPm25Mean(pm25Avg)
+      setPm10Mean(pm10Avg)
+
+      // DAQI is the highest index from PM2.5 and PM10 24-hour means
+      const pm25Index = pm25Avg !== null ? getPollutantIndex('PM2.5', pm25Avg) : null
+      const pm10Index = pm10Avg !== null ? getPollutantIndex('PM10', pm10Avg) : null
+
+      const indices = [pm25Index, pm10Index].filter((i) => i !== null)
+      const score = indices.length > 0 ? Math.max(...indices) : null
+
+      setDaqi(score)
+      setBand(getDAQIBand(score))
+      setLastUpdated(new Date())
       setError(null)
     } catch (err) {
       setError(err.message)
@@ -167,9 +153,9 @@ function AirQuality() {
             </div>
             <h2 className="text-sm font-semibold text-slate-700">Air Quality</h2>
           </div>
-          {readingTime && (
+          {lastUpdated && (
             <span className="text-[11px] text-slate-400">
-              Last updated: {readingTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+              Last updated: {lastUpdated.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
             </span>
           )}
         </div>
@@ -194,20 +180,20 @@ function AirQuality() {
                   </p>
                 )}
                 <div className="flex items-baseline gap-1.5 mt-1">
-                  <span className="text-sm font-semibold text-slate-900 tabular-nums">{aqi ?? '–'}</span>
+                  <span className="text-sm font-semibold text-slate-900 tabular-nums">{daqi ?? '–'}</span>
                   <span className="text-xs text-slate-400">/ 10 DAQI</span>
                 </div>
               </div>
               <div className="flex gap-4">
                 <div className="text-right">
-                  <p className={`text-sm font-semibold tabular-nums ${pm25 !== null ? getPollutantColor('PM2.5', pm25) : 'text-slate-700'}`}>
-                    {pm25 !== null ? pm25.toFixed(1) : '–'}
+                  <p className={`text-sm font-semibold tabular-nums ${pm25Mean !== null ? getPollutantColor('PM2.5', pm25Mean) : 'text-slate-700'}`}>
+                    {pm25Mean !== null ? pm25Mean.toFixed(1) : '–'}
                   </p>
                   <p className="text-[11px] text-slate-400">PM2.5 µg/m³</p>
                 </div>
                 <div className="text-right">
-                  <p className={`text-sm font-semibold tabular-nums ${pm10 !== null ? getPollutantColor('PM10', pm10) : 'text-slate-700'}`}>
-                    {pm10 !== null ? pm10.toFixed(1) : '–'}
+                  <p className={`text-sm font-semibold tabular-nums ${pm10Mean !== null ? getPollutantColor('PM10', pm10Mean) : 'text-slate-700'}`}>
+                    {pm10Mean !== null ? pm10Mean.toFixed(1) : '–'}
                   </p>
                   <p className="text-[11px] text-slate-400">PM10 µg/m³</p>
                 </div>
