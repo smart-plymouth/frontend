@@ -6,6 +6,7 @@ const API_BASE = 'https://api.smartplymouth.org/api/emergency-wait-times/v1.0'
 function EmergencyWaitTimes() {
   const [longestWait, setLongestWait] = useState(null)
   const [totalWaiting, setTotalWaiting] = useState(null)
+  const [lastUpdated, setLastUpdated] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -41,6 +42,7 @@ function EmergencyWaitTimes() {
 
       setLongestWait(maxWait)
       setTotalWaiting(totalPatients)
+      setLastUpdated(new Date())
       setError(null)
     } catch (err) {
       setError(err.message)
@@ -73,7 +75,11 @@ function EmergencyWaitTimes() {
             </div>
             <h2 className="text-sm font-semibold text-slate-700">Emergency Waits</h2>
           </div>
-          <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+          {lastUpdated && (
+            <span className="text-[11px] text-slate-400">
+              Last updated: {lastUpdated.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+            </span>
+          )}
         </div>
 
         <div className="flex-1 flex items-center">

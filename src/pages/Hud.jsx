@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import EmergencyWaitTimes from '../components/EmergencyWaitTimes.jsx'
 import PlanningApplications from '../components/PlanningApplications.jsx'
 import BirdMonitoring from '../components/BirdMonitoring.jsx'
+import AirQuality from '../components/AirQuality.jsx'
 
 function Hud() {
   const [time, setTime] = useState(new Date())
@@ -38,6 +39,7 @@ function Hud() {
         <EmergencyWaitTimes />
         <PlanningApplications />
         <BirdMonitoring />
+        <AirQuality />
       </div>
     </div>
   )

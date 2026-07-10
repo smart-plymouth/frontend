@@ -7,6 +7,7 @@ import PlanningCase from './pages/PlanningCase.jsx'
 import PlanningTracker from './pages/PlanningTracker.jsx'
 import BirdMonitoringExplore from './pages/BirdMonitoringExplore.jsx'
 import EmergencyWaitTimesPage from './pages/EmergencyWaitTimes.jsx'
+import AirQualityExplore from './pages/AirQualityExplore.jsx'
 import Phase10Campaign from './pages/Phase10Campaign.jsx'
 
 function NavLink({ to, children }) {
@@ -106,6 +107,7 @@ function App() {
           <Route path="/planning/:reference" element={<PlanningCase />} />
           <Route path="/emergency-wait-times" element={<EmergencyWaitTimesPage />} />
           <Route path="/bird-monitoring" element={<BirdMonitoringExplore />} />
+          <Route path="/air-quality" element={<AirQualityExplore />} />
         </Routes>
       </main>
 
