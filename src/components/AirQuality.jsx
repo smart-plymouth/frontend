@@ -34,8 +34,10 @@ const DAQI_BREAKPOINTS = {
 function getPollutantIndex(pollutant, value) {
   const breakpoints = DAQI_BREAKPOINTS[pollutant]
   if (!breakpoints) return null
+  // Round to nearest integer as DEFRA bands use whole-number thresholds
+  const rounded = Math.round(value)
   for (const bp of breakpoints) {
-    if (value >= bp.low && value <= bp.high) return bp.index
+    if (rounded >= bp.low && rounded <= bp.high) return bp.index
   }
   return 10
 }
